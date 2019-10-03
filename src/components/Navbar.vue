@@ -15,6 +15,9 @@
                 <li class="nav-item">
                     <router-link class="nav-link" to="/log">Log</router-link>
                 </li>
+                <li class="nav-item">
+                    <router-link class="nav-link" to="/test">Latest Reckons</router-link>
+                </li>
             </ul>
             <div class="my-2 my-lg-0">
                 <span v-if="isLogged" class="username">{{userEmail}}</span>

@@ -4,6 +4,7 @@ import Contacts from './views/Contacts.vue'
 import Update from './views/UpdateContact.vue';
 import LoginRegister from './views/LoginRegister.vue';
 import Log from './views/Log.vue';
+import Reckon from './views/Reckon.vue';
 
 import { auth } from './sensitivedata/firebase';
 
@@ -42,6 +43,11 @@ let router = new Router({
             path: '/login',
             name: 'login',
             component: LoginRegister
+        },
+        {
+            path: '/test',
+            name: 'test',
+            component: Reckon
         }
     ]
 })
