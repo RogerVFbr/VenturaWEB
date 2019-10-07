@@ -75,6 +75,7 @@
   .log-container {
     margin-top: 50px;
     padding-bottom: 50px;
+      background-color: transparent;
   }
 
   .contacts-div-layout {

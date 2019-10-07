@@ -2,8 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import jQuery from 'jquery';
-import 'popper.js';
-import 'bootstrap';
+// import 'popper.js';
+// import 'bootstrap';
+import 'materialize-css';
+import 'materialize-css/dist/css/materialize.css'
 import './assets/app.scss';
 import './sensitivedata/firebase'
 import { rtdbPlugin } from 'vuefire'
