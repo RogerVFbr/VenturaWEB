@@ -5,11 +5,12 @@
             <div class="container">
                 <a href="#" class="brand-logo left"><i class="large material-icons">assignment_ind</i>FaceAuth</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="sass.html">Sass</a></li>
-                    <li><a href="badges.html">Components</a></li>
-                    <li><router-link to="/test">Latest Reckons</router-link></li>
+<!--                    <li><a href="sass.html">Sass</a></li>-->
+                    <li><a href="badges.html" class="routerlinks">Registrations</a></li>
+                    <li><router-link to="/test" class="routerlinks">Successful reckons</router-link></li>
+                    <li><router-link to="/test" class="routerlinks">Failed reckons</router-link></li>
                     <!--<span v-if="isLogged" class="username">{{userEmail}}</span>-->
-                    <button v-if="!isLogged" class="waves-effect waves-light btn-small blue darken-2" type="submit" @click="$router.push('login')">Login/Register</button>
+                    <button v-if="!isLogged" class="waves-effect waves-light btn-small blue darken-2" type="submit" @click="$router.push('login')">Login</button>
                     <button v-if="isLogged" class="waves-effect waves-light btn-small blue darken-2" type="submit" @click="logout">Logout</button>
                 </ul>
             </div>
@@ -60,7 +61,8 @@
         data() {
             return {
                 isLogged: false,
-                userEmail: ''
+                userEmail: '',
+
             }
         },
         methods: {
@@ -87,6 +89,18 @@
 
     .username {
         margin-right: 10px;
+    }
+
+    .routerlinks {
+        text-decoration: none !important;
+        opacity: 0.7;
+        color: white;
+        transition: all 0.2s ease-out;
+    }
+
+    .routerlinks:hover {
+        color: white !important;
+        opacity: 1;
     }
 
 </style>
