@@ -1,8 +1,6 @@
 <template>
     <div class="content">
-
         <div id="filterbar" class="container">
-
             <div class="row">
                 <form class="col s12">
                     <div class="row">
@@ -45,7 +43,8 @@
                             <label>Minute</label>
                         </div>
                         <div class="input-field col s1 l1" ref="myInput">
-                            <a id="reloadbutton" class="btn-floating btn-large waves-effect waves-light purple darken-4 z-depth-3" @click="reloadOnClick"><i class="material-icons">autorenew</i></a>
+                            <a id="reloadbutton" class="btn-floating btn-large waves-effect waves-light purple darken-4 z-depth-3" @click="reloadOnClick" v-if="!isLoading"><i class="material-icons">autorenew</i></a>
+                            <a id="reloadbutton-rotate" class="btn-floating btn-large waves-effect waves-light purple darken-4 z-depth-3" v-else><i class="material-icons">autorenew</i></a>
                         </div>
                     </div>
                 </form>
@@ -55,7 +54,7 @@
         <div id="cardscontainer" class="container">
             <div class="card evcard z-depth-3" v-for="reckon in reckonData">
                 <div class="card-image">
-                    <img :src="url + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
+                    <img :src="bucket_url + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
                 </div>
                 <div class="card-content white-text">
                     <small class="grey-text">ID</small>
@@ -67,11 +66,7 @@
                 </div>
             </div>
         </div>
-
-
-
-
-        </div>
+    </div>
 </template>
 
 <script>
@@ -93,7 +88,9 @@
         },
         data() {
             return {
-                url: 'https://facial-recog-auth-front-images-repo.s3.amazonaws.com/',
+                api_url: 'https://ducc36yxee.execute-api.us-east-1.amazonaws.com/proto01-01/admin',
+                bucket_url: 'https://facial-recog-auth-front-images-repo.s3.amazonaws.com/',
+                isLoading: false,
                 reckonData: [],
                 year: '',
                 yearOptions: [],
@@ -113,15 +110,34 @@
         },
         methods: {
             loadData: function () {
-                var url = "https://ducc36yxee.execute-api.us-east-1.amazonaws.com/proto01-01/admin";
-                fetch(url)
+                this.isLoading = true;
+                const request = {
+                    userId: this.userId,
+                    year: this.year,
+                    month: this.month,
+                    day: this.day,
+                    hour: this.hour,
+                    minute: this.minute,
+                    second: this.second
+                }
+
+                fetch(this.api_url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': 'ihj6N9ICO31VkEW9w1LKra5NltNSujEUa9S57NIz'
+                    },
+                    body: JSON.stringify(request)
+                })
                     .then(response => response.json())
                     .then(data => {
                         data.payload.sort((a, b) => (a.time > b.time) ? 1 : -1 )
                         this.reckonData = data.payload;
+                        this.isLoading = false;
                     })
                     .catch(err => {
                         console.error('Failed retrieving data : ' + err);
+                        this.isLoading = false;
                     })
             },
             buildYearOptions: function () {
@@ -158,13 +174,6 @@
             },
             reloadOnClick: function () {
                 this.reckonData = [];
-                console.log('UserId = ' + this.userId);
-                console.log('Year = ' + this.year);
-                console.log('Month = ' + this.month);
-                console.log('Day = ' + this.day);
-                console.log('Hour = ' + this.hour);
-                console.log('Minute = ' + this.minute);
-                console.log('Seconds = ' + this.seconds);
                 this.loadData();
             }
         }
@@ -204,6 +213,19 @@
         margin-left: 5px;
         margin-top: -10px;
     }
+
+    #reloadbutton-rotate {
+        margin-left: 5px;
+        margin-top: -10px;
+        -webkit-animation:spin 4s linear infinite;
+        -moz-animation:spin 4s linear infinite;
+        animation:spin 1s linear infinite;
+    }
+
+    @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+    @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+    @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
 
     .dropdown-content>li>a {
         color: white !important;
