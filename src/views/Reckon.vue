@@ -16,13 +16,14 @@
                             <label>Year</label>
                         </div>
                         <div class="input-field col s1 l1" ref="myInput2">
-                            <select v-model="month">
+                            <select v-model="monthComp" @change="setMonthToAll()">
+                                <option value="all" selected>All</option>
                                 <option v-for="y in monthOptions" :value="y" class="white-text">{{ y}}</option>
                             </select>
                             <label>Month</label>
                         </div>
                         <div class="input-field col s1 l1" ref="myInput2">
-                            <select v-model="day">
+                            <select v-model="dayComp">
                                 <option value="all" selected>All</option>
                                 <option v-for="y in dayOptions" :value="y" class="white-text">{{ y}}</option>
                             </select>
@@ -30,14 +31,14 @@
                         </div>
                         <div class="input-field col s1 l1" ref="myInput">
                             <select v-model="hour">
-                                <option value="all" disabled selected>All</option>
+                                <option value="all" selected>All</option>
                                 <option v-for="y in hourOptions" :value="y" class="white-text">{{ y}}</option>
                             </select>
                             <label>Hour</label>
                         </div>
                         <div class="input-field col s1 l1" ref="myInput">
                             <select v-model="minute">
-                                <option value="all" disabled selected>All</option>
+                                <option value="all" selected>All</option>
                                 <option v-for="y in minuteOptions" :value="y" class="white-text">{{ y}}</option>
                             </select>
                             <label>Minute</label>
@@ -52,7 +53,7 @@
         </div>
 
         <div id="cardscontainer" class="container">
-            <div class="card evcard z-depth-3" v-for="reckon in reckonData">
+            <div class="card evcard z-depth-3" v-for="reckon in reckonData" v-if="reckonData.length">
                 <div class="card-image">
                     <img :src="bucket_url + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
                 </div>
@@ -60,12 +61,13 @@
                     <small class="grey-text">ID</small>
                     <p class="card-text">{{ reckon.userId }}</p>
                     <small class="grey-text">Date</small>
-                    <p class="card-text">{{ reckon.time.split(' ')[0] }}</p>
+                    <p class="card-text">{{ getDateFromDateTime(reckon.time) }}</p>
                     <small class="grey-text">Time</small>
-                    <p class="card-text">{{ reckon.time.split(' ')[1].split('.')[0] }}</p>
+                    <p class="card-text">{{ getTimeFromDateTime(reckon.time)}}</p>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -172,9 +174,70 @@
                     this.secondOptions.push(x);
                 }
             },
+            getDateFromDateTime: function (datetime) {
+                datetime = datetime.split('-')
+                if (datetime.length<3) return 'N.A.'
+                datetime = datetime.slice(0, 3)
+                return datetime[2] + '/' + datetime[1] + '/' + datetime[0]
+
+            },
+            getTimeFromDateTime: function (datetime) {
+                datetime = datetime.split('-')
+                if (datetime.length<6) return 'N.A.'
+                datetime = datetime.slice(3, 7)
+                return datetime[0] + ':' + datetime[1] + ':' + datetime[2]
+
+            },
             reloadOnClick: function () {
                 this.reckonData = [];
                 this.loadData();
+            },
+            setYearToAll: function () {
+                this.year = 'all'
+                this.setMonthToAll()
+            },
+            setMonthToAll: function () {
+                if (this.month != 'all') return;
+                console.log('month ' + this.month);
+                this.day = 'all';
+                this.setDayToAll()
+            },
+            setDayToAll: function () {
+                if (this.day != 'all') return;
+                console.log('day ' + this.day);
+                this.hour = 'all'
+                this.setHourToAll()
+            },
+            setHourToAll: function () {
+                if (this.hour != 'all') return;
+                console.log('hour ' + this.hour);
+                this.minute = 'all'
+                this.setMinuteToAll()
+            },
+            setMinuteToAll: function () {
+                if (this.minute != 'all') return;
+                console.log('minute ' + this.minute);
+                this.second = 'all'
+                this.$forceUpdate()
+                // this.setSecondToAll()
+            }
+        },
+        computed: {
+            monthComp: {
+                get () {
+                    return this.month;
+                },
+                set (val) {
+                    this.month = val
+                }
+            },
+            dayComp: {
+                get () {
+                    return this.day;
+                },
+                set (val) {
+                    this.day = val
+                }
             }
         }
     }
