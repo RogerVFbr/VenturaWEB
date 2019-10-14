@@ -1,15 +1,17 @@
 <template>
 
-    <html>
-        <head>
-            <title>FellowFaceAuth</title>
-        </head>
+<!--    <html>-->
+<!--        <head>-->
+<!--            <title>FellowFaceAuth</title>-->
+<!--        </head>-->
         <!--&lt;!&ndash; Compiled and minified CSS &ndash;&gt;-->
         <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">-->
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <body>
+<!--        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+<!--        <body>-->
 
         <div id="app">
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
             <Navbar :key="$route.fullPath"></Navbar>
             <div class="row">
                 <div class="col-sm-12 page home">
@@ -22,8 +24,8 @@
 
         <!--&lt;!&ndash; Compiled and minified JavaScript &ndash;&gt;-->
         <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->
-        </body>
-    </html>
+<!--        </body>-->
+<!--    </html>-->
 
 
 </template>
@@ -38,6 +40,7 @@
         -moz-osx-font-smoothing: grayscale;
         /*text-align: center;*/
         color: #2c3e50;
+        /*height: 100%;*/
         overflow-x: hidden;
     }
 
