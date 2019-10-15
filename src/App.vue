@@ -1,33 +1,15 @@
 <template>
-
-<!--    <html>-->
-<!--        <head>-->
-<!--            <title>FellowFaceAuth</title>-->
-<!--        </head>-->
-        <!--&lt;!&ndash; Compiled and minified CSS &ndash;&gt;-->
-        <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">-->
-<!--        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
-<!--        <body>-->
-
-        <div id="app">
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-            <Navbar :key="$route.fullPath"></Navbar>
-            <div class="row">
-                <div class="col-sm-12 page home">
-                    <transition name="router-anim">
-                        <router-view :key="$route.fullPath"/>
-                    </transition>
-                </div>
+    <div id="app">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <Navbar :key="$route.fullPath"></Navbar>
+        <div class="row">
+            <div class="col-sm-12 page home">
+                <transition name="router-anim">
+                    <router-view :key="$route.fullPath"/>
+                </transition>
             </div>
         </div>
-
-        <!--&lt;!&ndash; Compiled and minified JavaScript &ndash;&gt;-->
-        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->
-<!--        </body>-->
-<!--    </html>-->
-
-
+    </div>
 </template>
 
 <style>
@@ -38,10 +20,9 @@
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        /*text-align: center;*/
         color: #2c3e50;
         /*height: 100%;*/
-        overflow-x: hidden;
+        /*overflow-x: hidden;*/
     }
 
     .page {
@@ -64,21 +45,13 @@
     }
 
     @keyframes coming {
-        from {
-            opacity: 0;
-
-        }
-        to {
-            opacity: 1;
-        }
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
 
     @keyframes going {
-        from {
-        }
-        to {
-            opacity: 0;
-        }
+        from { }
+        to { opacity: 0; }
     }
 
 
