@@ -1,0 +1,99 @@
+<template>
+
+    <div class="content">
+
+        <filter-bar :isLoading="isLoading"
+                    :callback="loadData"
+                    :visible="!entryMode.active"
+        />
+
+        <log-cards-container :data="reckonData"
+                             :bucketUrl="bucket_url"
+                             :callback="selectEntry"
+                             :visible="!entryMode.active"
+
+        />
+
+        <entry-mode-container :data="entryMode.data"
+                              :bucketUrl="bucket_url"
+                              :callback="setEntryModeInactive"
+                              :visible="entryMode.active"
+        />
+
+    </div>
+
+</template>
+
+<script>
+
+    import FilterBar from '@/components/FilterBar.vue'
+    import LogCardsContainer from '@/components/LogCardsContainer.vue'
+    import EntryModeContainer from '@/components/EntryModeContainer.vue'
+    import { apiUrl } from "../sensitivedata/aws";
+    import { bucketUrl } from "../sensitivedata/aws";
+    import { apiKey } from "../sensitivedata/aws";
+
+    export default {
+        name: "log-fail-reckon",
+        components: {
+            FilterBar,
+            LogCardsContainer,
+            EntryModeContainer
+        },
+        data() {
+            return {
+                bucket_url: bucketUrl,
+                isLoading: false,
+                reckonData: [],
+                entryMode: {
+                    active: false,
+                    data: {}
+                }
+            }
+        },
+        methods: {
+            loadData: function (request) {
+                this.isLoading = true;
+                this.reckonData = [];
+                request.command = 'get';
+                request.table = 'reckon-fail';
+                fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey
+                    },
+                    body: JSON.stringify(request)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.reckonData = data.payload;
+                        this.isLoading = false;
+                    })
+                    .catch(err => {
+                        console.error('Failed retrieving data : ' + err);
+                        this.isLoading = false;
+                    })
+            },
+            selectEntry: function (entry) {
+                this.entryMode.data = entry;
+                this.entryMode.active = true;
+            },
+            setEntryModeInactive() {
+                this.entryMode.active = false;
+            }
+        }
+    }
+
+</script>
+
+
+<style scoped>
+
+    .content {
+        margin-top: 20px;
+        padding-bottom: 50px;
+        width: 100%;
+    }
+
+</style>

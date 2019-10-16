@@ -6,28 +6,26 @@
                 <a href="#" class="brand-logo left"><i class="large material-icons">assignment_ind</i>FaceAuth</a>
                 <a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-<!--                    <li><a href="badges.html" class="routerlinks">Registrations</a></li>-->
-<!--                    <li><router-link to="/test" class="routerlinks">Successful reckons</router-link></li>-->
-<!--                    <li><router-link to="/test" class="routerlinks">Failed reckons</router-link></li>-->
+                    <li><router-link to="/users" class="routerlinks">Users</router-link></li>
                     <!-- Dropdown Trigger -->
                     <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Logs<i class="material-icons right">arrow_drop_down</i></a></li>
                     <!-- Dropdown Structure -->
                     <ul id="dropdown1" class="dropdown-content">
-                        <li><router-link to="/test" class="routerlinks">Registrations</router-link></li>
-                        <li><router-link to="/test" class="routerlinks">Successful reckons</router-link></li>
-                        <li><router-link to="/test" class="routerlinks">Failed reckons</router-link></li>
+                        <li><router-link to="/register-log" class="routerlinks">Registrations</router-link></li>
+                        <li><router-link to="/reckon-log-success" class="routerlinks">Successful reckons</router-link></li>
+                        <li><router-link to="/reckon-log-fail" class="routerlinks">Failed reckons</router-link></li>
                     </ul>
 
                     <!--<span v-if="isLogged" class="username">{{userEmail}}</span>-->
-                    <button v-if="!isLogged" class="waves-effect waves-light btn-small blue darken-2" type="submit" @click="$router.push('login')">Login</button>
-                    <button v-if="isLogged" class="waves-effect waves-light btn-small blue darken-2" type="submit" @click="logout">Logout</button>
+<!--                    <button v-if="!isLogged" class="waves-effect waves-light btn-small blue darken-2" type="submit" @click="$router.push('login')">Login</button>-->
+                    <button v-if="isLogged" class="waves-effect wavese-light btn-small blue darken-2" type="submit" @click="logout">Logout</button>
                 </ul>
             </div>
         </div>
         <ul class="sidenav purple darken-4" id="mobile-demo">
-            <li><router-link to="/test" class="routerlinks">Registrations</router-link></li>
-            <li><router-link to="/test" class="routerlinks">Successful reckons</router-link></li>
-            <li><router-link to="/test" class="routerlinks">Failed reckons</router-link></li>
+            <li><router-link to="/register-log" class="routerlinks">Registrations</router-link></li>
+            <li><router-link to="/reckon-log-success" class="routerlinks">Successful reckons</router-link></li>
+            <li><router-link to="/reckon-log-fail" class="routerlinks">Failed reckons</router-link></li>
         </ul>
     </nav>
 

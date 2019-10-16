@@ -2,9 +2,9 @@
 
     <div id="cardscontainer" class="container" :class="{ invisible: !visible, visible: visible }" v-if="data.length">
 
-        <div class="card evcard z-depth-3" v-for="reckon in data" @click="callback(reckon)">
+        <div class="card evcard z-depth-3" v-for="reckon in data">
 
-            <div class="card-image">
+            <div class="card-image" @click="callback(reckon)"   >
                 <img :src="bucketUrl + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
                 <div class="imgcaption">
                     <div class="left">
@@ -57,6 +57,7 @@
     #cardscontainer{
         padding: 0px;
         text-align: center;
+        z-index: 100;
     }
 
     #cardscontainer .card-content {
@@ -108,12 +109,13 @@
     .visible {
         visibility: visible;
         opacity: 1;
+        transition: visibility 0s linear 0s, opacity 0.35s linear;
     }
 
     .invisible {
         visibility: hidden;
         opacity: 0;
-        transition: visibility 0s linear 0.2s, opacity 0.2s linear;
+        transition: visibility 0s linear 0.35s, opacity 0.35s linear;
     }
 
 </style>

@@ -55,6 +55,8 @@
             loadData: function (request) {
                 this.isLoading = true;
                 this.reckonData = [];
+                request.command = 'get';
+                request.table = 'reckon';
                 fetch(apiUrl, {
                     method: 'POST',
                     headers: {
@@ -65,7 +67,6 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    data.payload.sort((a, b) => (a.time > b.time) ? 1 : -1 )
                     this.reckonData = data.payload;
                     this.isLoading = false;
                 })

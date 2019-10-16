@@ -246,12 +246,13 @@
     .visible {
         visibility: visible;
         opacity: 1;
+        transition: visibility 0s linear 0s, opacity 0.35s linear;
     }
 
     .invisible {
         visibility: hidden;
         opacity: 0;
-        transition: visibility 0s linear 0.2s, opacity 0.2s linear;
+        transition: visibility 0s linear 0.35s, opacity 0.35s linear;
     }
 
 </style>

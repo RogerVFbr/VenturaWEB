@@ -4,7 +4,10 @@ import Contacts from './views/Contacts.vue'
 import Update from './views/UpdateContact.vue';
 import LoginRegister from './views/LoginRegister.vue';
 import Log from './views/Log.vue';
-import Reckon from './views/Reckon.vue';
+import ReckonLog from './views/ReckonLog.vue';
+import ReckonFailLog from './views/ReckonFailLog.vue';
+import RegisterLog from './views/RegisterLog.vue';
+import Users from './views/Users.vue';
 
 import { auth } from './sensitivedata/firebase';
 
@@ -45,9 +48,24 @@ let router = new Router({
             component: LoginRegister
         },
         {
-            path: '/test',
-            name: 'test',
-            component: Reckon
+            path: '/reckon-log-success',
+            name: 'reckon-log-success',
+            component: ReckonLog
+        },
+        {
+            path: '/reckon-log-fail',
+            name: 'reckon-log-fail',
+            component: ReckonFailLog
+        },
+        {
+            path: '/register-log',
+            name: 'register-log',
+            component: RegisterLog
+        },
+        {
+            path: '/users',
+            name: 'users',
+            component: Users
         }
     ]
 })
