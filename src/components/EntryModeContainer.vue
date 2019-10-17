@@ -117,7 +117,8 @@
             }
         },
         watch: {
-            data: function(val) {
+            visible: function(val) {
+                if (this.visible == false) return;
                 this.isIFrameLoaded = false;
                 $('#gmap_canvas').attr(
                     'src',
@@ -154,8 +155,6 @@
         left: 10px;
         right: 10px;
         bottom: 10px;
-        /*height: 200px;*/
-        /*width: 200px;*/
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 0.25rem;
         z-index: -1;
@@ -198,7 +197,6 @@
         width:100%;
         overflow:hidden;
         height:400px;
-
     }
 
     .col {

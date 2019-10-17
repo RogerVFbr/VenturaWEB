@@ -3,46 +3,46 @@
         <div class="row">
             <form class="col s12">
                 <div class="row">
-                    <div class="input-field col s12 l6">
+                    <div class="input-field col s12 m4 l5 xl5">
                         <i id="useridicon" class="large material-icons prefix grey-text">account_circle</i>
                         <input id="first_name" type="text" class="validate white-text" v-model="apiFilterOptions.userId">
                         <label for="first_name">User Id</label>
                     </div>
-                    <div class="input-field col s1 l1 white-text" ref="myInput">
+                    <div class="input-field col s4 m1 l1 xl1 white-text" ref="myInput">
                         <select v-model="apiFilters.year">
                             <option v-for="y in apiFilterOptions.year" :value="y" class="white-text">{{ y }}</option>
                         </select>
                         <label>Year</label>
                     </div>
-                    <div class="input-field col s1 l1" ref="myInput2">
+                    <div class="input-field col s4 m1 l1 xl1" ref="myInput2">
                         <select v-model="apiFilters.month" @change="setMonthToAll()">
                             <option value="all" selected>All</option>
                             <option v-for="y in apiFilterOptions.month" :value="y" class="white-text">{{ y }}</option>
                         </select>
                         <label>Month</label>
                     </div>
-                    <div class="input-field col s1 l1" ref="myInput2" :class="{ disabledInput: apiFilters.month == 'all' }">
+                    <div class="input-field col s4 m1 l1 xl1" ref="myInput2" :class="{ disabledInput: apiFilters.month == 'all' }">
                         <select v-model="apiFilters.day" @change="setDayToAll()">
                             <option value="all" selected>All</option>
                             <option v-for="y in apiFilterOptions.day" :value="y" class="white-text">{{ y }}</option>
                         </select>
                         <label>Day</label>
                     </div>
-                    <div class="input-field col s1 l1" ref="myInput" :class="{ disabledInput: apiFilters.day == 'all' }">
+                    <div class="input-field col s4 m1 l1 xl1" ref="myInput" :class="{ disabledInput: apiFilters.day == 'all' }">
                         <select v-model="apiFilters.hour" @change="setHourToAll()">
                             <option value="all" selected>All</option>
                             <option v-for="y in apiFilterOptions.hour" :value="y" class="white-text">{{ y }}</option>
                         </select>
                         <label>Hour</label>
                     </div>
-                    <div class="input-field col s1 l1" ref="myInput" :class="{ disabledInput: apiFilters.hour == 'all' }">
+                    <div class="input-field col s4 m1 l1 xl1" ref="myInput" :class="{ disabledInput: apiFilters.hour == 'all' }">
                         <select v-model="apiFilters.minute" @change="setMinuteToAll()">
                             <option value="all" selected>All</option>
                             <option v-for="y in apiFilterOptions.minuteSecond" :value="y" class="white-text">{{ y }}</option>
                         </select>
                         <label>Minute</label>
                     </div>
-                    <div class="input-field col s1 l1" ref="myInput">
+                    <div class="input-field col s4 m2 l1 xl1" ref="myInput">
                         <a id="reloadbutton" class="btn-floating btn-large waves-effect waves-light purple darken-4 z-depth-3" @click="retrieveFilterParameters()" v-if="!isLoading"><i class="material-icons">autorenew</i></a>
                         <a id="reloadbutton-rotate" class="btn-floating btn-large waves-effect waves-light purple darken-4 z-depth-3" v-else><i class="material-icons">autorenew</i></a>
                     </div>

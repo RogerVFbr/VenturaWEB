@@ -1,6 +1,6 @@
 <template>
-    <div id="fab-button" v-if="show" class="floating-button" @click="triggerOnclick">
-        <font-awesome-icon icon="plus" class="floating-button-icon"/>
+    <div id="fab-button" class="floating-button purple darken-4 waves-effect wavese-light hoverable" @click="triggerOnclick" :class="{ hideclass: !show , showclass: show}">
+        <font-awesome-icon icon="plus" class="floating-button-icon white-text"/>
     </div>
 </template>
 
@@ -12,10 +12,7 @@
             onclick: {},
         },
         methods: {
-            triggerOnclick: function() {
-                $("#fab-button").hide()
-                this.onclick();
-            }
+            triggerOnclick: function() { this.onclick(); }
         }
     }
 </script>
@@ -24,15 +21,60 @@
 
     .floating-button {
         position:fixed;
-        width:60px;
-        height:60px;
-        bottom:40px;
-        right:40px;
-        background-color:#17A2B8;
-        color:#FFF;
+        width:55px;
+        height:55px;
+        bottom:20px;
+        right:20px;
         border-radius:50px;
         text-align:center;
         box-shadow: 5px 5px 30px rgba(0, 0, 0, .4);
+        opacity: 0;
+    }
+
+    /*.floating-button:hover {*/
+    /*    background-color: ;*/
+    /*}*/
+
+    .floating-button-icon {
+        margin-top: 18px;
+        font-size: 1.3rem;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            bottom: 10px;
+            right: 10px;
+            transform: scale(.8);
+            -webkit-transform: scale(.8);
+        }
+        to {
+            opacity: 1;
+            bottom: 20px;
+            right: 20px;
+            transform: scale(1);
+            -webkit-transform: scale(1);
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            bottom: 20px;
+            right: 20px;
+            transform: scale(1);
+            -webkit-transform: scale(1);
+        }
+        to {
+            opacity: 0;
+            bottom: 10px;
+            right: 10px;
+            transform: scale(.8);
+            -webkit-transform: scale(.8);
+        }
+    }
+
+    .showclass {
         animation-name: fadeIn;
         animation-duration: 1.7s;
         animation-delay: .7s;
@@ -40,25 +82,11 @@
         opacity: 0;
     }
 
-    .floating-button-icon {
-        margin-top: 22px;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            bottom: 30px;
-            right: 30px;
-            transform: scale(.8);
-            -webkit-transform: scale(.8);
-        }
-        to {
-            opacity: 1;
-            bottom: 40px;
-            right: 40px;
-            transform: scale(1);
-            -webkit-transform: scale(1);
-        }
+    .hideclass {
+        animation-name: fadeOut;
+        animation-duration: 0.25s;
+        animation-fill-mode: forwards;
+        opacity: 1;
     }
 
 </style>

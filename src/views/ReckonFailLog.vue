@@ -29,9 +29,9 @@
     import FilterBar from '@/components/FilterBar.vue'
     import LogCardsContainer from '@/components/LogCardsContainer.vue'
     import EntryModeContainer from '@/components/EntryModeContainer.vue'
-    import { apiUrl } from "../sensitivedata/aws";
+    import { ADMIN_ENDPOINT_URL } from "../sensitivedata/aws";
     import { bucketUrl } from "../sensitivedata/aws";
-    import { apiKey } from "../sensitivedata/aws";
+    import { API_KEY } from "../sensitivedata/aws";
 
     export default {
         name: "log-fail-reckon",
@@ -57,11 +57,11 @@
                 this.reckonData = [];
                 request.command = 'get';
                 request.table = 'reckon-fail';
-                fetch(apiUrl, {
+                fetch(ADMIN_ENDPOINT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'x-api-key': apiKey
+                        'x-api-key': API_KEY
                     },
                     body: JSON.stringify(request)
                 })

@@ -4,36 +4,30 @@
 
         <filter-bar :isLoading="isLoading"
                     :callback="loadData"
-                    :visible="!entryMode.active"
+                    :visible="!entryMode.active && !showNewUserContainer"
         />
 
         <log-cards-container :data="reckonData"
                              :bucketUrl="bucket_url"
                              :callback="selectEntry"
-                             :visible="!entryMode.active"
+                             :visible="!entryMode.active && !showNewUserContainer"
 
         />
 
         <entry-mode-container :data="entryMode.data"
                               :bucketUrl="bucket_url"
                               :callback="setEntryModeInactive"
-                              :visible="entryMode.active"
+                              :visible="entryMode.active && !showNewUserContainer"
         />
 
-<!--        <div class="fixed-action-btn">-->
-<!--            <a class="btn-floating btn-large red">-->
-<!--                <i class="large material-icons">mode_edit</i>-->
-<!--            </a>-->
-<!--            <ul>-->
-<!--                <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>-->
-<!--                <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>-->
-<!--                <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>-->
-<!--                <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>-->
-<!--            </ul>-->
-<!--        </div>-->
+        <floating-action-button :show="showFloatingButton"
+                                :onclick="setShowAddContainer"
+        />
 
-        <floating-action-button :show="true"
-                                :onclick="navigateToAdd"/>
+        <new-user-container :onSave="onNewUserSave"
+                            :onClose="onAddContainerClose"
+                            :visible="showNewUserContainer"
+        />
 
     </div>
 
@@ -45,9 +39,10 @@
     import LogCardsContainer from '@/components/LogCardsContainer.vue'
     import EntryModeContainer from '@/components/EntryModeContainer.vue'
     import FloatingActionButton from '@/components/FloatingActionButton.vue'
-    import { apiUrl } from "../sensitivedata/aws";
+    import NewUserContainer from '@/components/NewUserContainer.vue'
+    import { ADMIN_ENDPOINT_URL } from "../sensitivedata/aws";
     import { bucketUrl } from "../sensitivedata/aws";
-    import { apiKey } from "../sensitivedata/aws";
+    import { API_KEY } from "../sensitivedata/aws";
 
     export default {
         name: "users",
@@ -55,7 +50,8 @@
             FilterBar,
             LogCardsContainer,
             EntryModeContainer,
-            FloatingActionButton
+            FloatingActionButton,
+            NewUserContainer
         },
         mounted() {
             M.FloatingActionButton.init(document.querySelectorAll('.fixed-action-btn'))
@@ -64,6 +60,8 @@
             return {
                 bucket_url: bucketUrl,
                 isLoading: false,
+                showFloatingButton: true,
+                showNewUserContainer: false,
                 reckonData: [],
                 entryMode: {
                     active: false,
@@ -77,11 +75,11 @@
                 this.reckonData = [];
                 request.command = 'collections';
                 request.table = '';
-                fetch(apiUrl, {
+                fetch(ADMIN_ENDPOINT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'x-api-key': apiKey
+                        'x-api-key': API_KEY
                     },
                     body: JSON.stringify(request)
                 })
@@ -99,9 +97,24 @@
             selectEntry: function (entry) {
                 this.entryMode.data = entry;
                 this.entryMode.active = true;
+                this.showFloatingButton = false;
             },
-            setEntryModeInactive() {
+            setEntryModeInactive: function () {
                 this.entryMode.active = false;
+                this.showFloatingButton = true;
+            },
+            setShowAddContainer: function () {
+                this.showFloatingButton = false;
+                this.showNewUserContainer = true;
+            },
+            onNewUserSave: function () {
+                this.showNewUserContainer = false;
+                this.showFloatingButton = true;
+                this.loadData();
+            },
+            onAddContainerClose: function () {
+                this.showNewUserContainer=false;
+                this.showFloatingButton = true;
             }
         }
     }
