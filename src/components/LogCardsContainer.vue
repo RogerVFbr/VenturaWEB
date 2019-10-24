@@ -5,7 +5,7 @@
         <div class="card evcard z-depth-3" v-for="reckon in data">
 
             <div class="card-image" @click="callback(reckon)"   >
-                <img :src="bucketUrl + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
+                <img class="log-image" :src="bucketUrl + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
                 <div class="imgcaption">
                     <div class="left">
                         {{ getDateFromDateTime(reckon.time) }}
@@ -92,13 +92,17 @@
         background: rgba(250,250,250,0.15);
     }
 
-    .card .card-image .card-title {
-        color: #fff;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        max-width: 100%;
-        padding: 0px 0px 0px 10px;
+    /*.card .card-image .card-title {*/
+    /*    color: #fff;*/
+    /*    position: absolute;*/
+    /*    bottom: 0;*/
+    /*    left: 0;*/
+    /*    max-width: 100%;*/
+    /*    padding: 0px 0px 0px 10px;*/
+    /*}*/
+
+    .log-image {
+        object-fit: cover;
     }
 
     .card .content small {

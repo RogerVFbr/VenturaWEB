@@ -16,17 +16,17 @@
 
                 <div class="row formrow">
 
-                    <div class="input-field col s12 m12 l12 xl12" :class="{ invisible: errorContent.show, visible: !errorContent.show }">
+                    <div class="input-field col s12 m12 l12 xl12" :class="{ invisible: errorContent.show || registerContent.show, visible: !errorContent.show && !registerContent.show}">
                         <input id="first_name" type="text" class="validate white-text" v-model="formData.userId" v-on:change="validateForm()">
                         <label for="first_name">New User Id</label>
                     </div>
 
-                    <div class="input-field col s12 m12 l12 xl12" :class="{ invisible: errorContent.show, visible: !errorContent.show }">
+                    <div class="input-field col s12 m12 l12 xl12" :class="{ invisible: errorContent.show || registerContent.show, visible: !errorContent.show && !registerContent.show }">
                         <input id="reason" type="text" class="validate white-text" v-model="formData.reason" v-on:change="validateForm()">
                         <label for="reason">Reason</label>
                     </div>
 
-                    <div class="file-field input-field col s12 m12 l12 xl12" :class="{ invisible: errorContent.show, visible: !errorContent.show }">
+                    <div class="file-field input-field col s12 m12 l12 xl12" :class="{ invisible: errorContent.show || registerContent.show, visible: !errorContent.show && !registerContent.show }">
                         <div class="waves-effect waves-light btn-small grey darken-2 filebutton">
                             <span>File</span>
                             <input id="file" type="file" v-on:change="validateForm()">
@@ -41,30 +41,51 @@
                             <h4 class="white-text">Error</h4>
                             <p class="white-text">{{errorContent.message}}</p>
                         </div>
+                    </div>
 
+                    <div class="registercontainer" :class="{ invisible: !registerContent.show, visible: registerContent.show }">
+                        <div class="registercontainercontent">
+                            <div class="white-text loading-text">{{ registerContent.message }}</div>
+                            <div class="preloader-wrapper small active">
+                                <div class="spinner-layer spinner-green-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                    <div class="circle"></div>
+                                </div><div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
 
-
-
                 <div class="row buttonrow">
+
                     <div class="col s12 m12 l12">
+
                         <button class="waves-effect waves-light btn-small teal darken-4 registerbutton" type="submit" @click="register()"
-                                :class="{ buttondisabled: !formData.validated || isSaving }">
+                                :class="{ buttondisabled: !formData.validated || registerContent.show || errorContent.show}">
                             Register
                             <i class="material-icons right">send</i>
                         </button>
-                        <button class="waves-effect waves-light btn-small red darken-4 closebutton" type="submit" @click="close()">
+
+                        <button class="waves-effect waves-light btn-small red darken-4 closebutton" type="submit" @click="close()"
+                                :class="{ buttondisabled: registerContent.show || errorContent.show }">
                             Cancel
                             <i class="material-icons right">cancel</i>
                         </button>
+
                     </div>
+
                 </div>
 
             </div>
 
             <div class="col s2 m2 l4 xl4"></div>
+
         </div>
 
     </div>
@@ -85,7 +106,12 @@
         },
         data () {
             return {
-                isSaving: false,
+                registerContent: {
+                    show: false,
+                    message: 'Registering...'
+                },
+                isRegistering: false,
+                isRegisterCompleted: false,
                 errorContent: {
                     show: false,
                     message: 'Unable to decode.'
@@ -113,15 +139,14 @@
                 this.onClose();
             },
             register: function () {
-                this.isSaving = true;
+                this.registerContent.show = true;
+                this.registerContent.message = 'Registering: encoding image...';
                 var file = document.querySelector('#file').files[0];
                 var reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = () => {
                     try {
                         this.formData.image = reader.result.split(";")[1].replace('base64,', '');
-                        // var a = undefined;
-                        // a.test = 0;
                         this.getGeolocation();
                     }
                     catch(err) {
@@ -134,6 +159,7 @@
                 };
             },
             getGeolocation: function () {
+                this.registerContent.message = 'Registering: acquiring coordinates...';
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(this.updateGeolocationOnRegistrationObject);
                 } else {
@@ -143,18 +169,16 @@
             updateGeolocationOnRegistrationObject: function (position) {
                 this.registrationObject.coordinates.lat = String(position.coords.latitude)
                 this.registrationObject.coordinates.lng = String(position.coords.longitude)
-                console.log(this.registrationObject.coordinates.lat);
-                console.log(this.registrationObject.coordinates.lng);
                 this.buildRegistrationObject();
             },
             buildRegistrationObject: function () {
+                this.registerContent.message = 'Registering: requesting...';
                 this.registrationObject.reason = this.formData.reason;
                 this.registrationObject.id = this.formData.userId;
                 this.registrationObject.image = this.formData.image;
 
                 fetch(REGISTER_ENDPOINT_URL, {
                     method: 'POST',
-                    // mode: "no-cors",
                     headers: {
                         'Content-Type': 'application/json',
                         'x-api-key': API_KEY
@@ -164,15 +188,18 @@
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
-                        this.onSave();
-                        this.isSaving = false;
+                        if (data.op_status && data.op_status == 'success')
+                            this.showRegisterSuccessful();
+                        else if (data.op_status && data.op_status == 'failed' && data.message)
+                            this.showError(data.message);
+                        else
+                            this.showError('Registration error!')
                     })
                     .catch(err => {
                         console.log(err);
-                        this.showError('Fetch error : ' + String(err));
+                        this.showError('Fetch error: ' + String(err));
                     })
             },
-
             validateForm: function () {
                 if (this.formData.userId == '') {
                     this.formData.validated = false;
@@ -188,13 +215,23 @@
                 }
                 this.formData.validated = true;
             },
+            showRegisterSuccessful: function () {
+                this.registerContent.message = 'Registration successful!';
+                setTimeout(() => {
+                    this.onSave();
+                    this.registerContent.show = false;
+                    this.isRegistering = false;
+                    this.registerContent.message = 'Registering...';
+                }, 1500)
+            },
             showError: function (msg) {
+                this.registerContent.show = false;
                 this.errorContent.show = true;
                 this.errorContent.message = msg;
                 setTimeout(() => {
                     this.errorContent.show = false;
-                    this.isSaving = false;
-                }, 3000)
+                    this.registerContent.message = 'Registering...';
+                }, 2000)
             }
         }
     }
@@ -207,9 +244,6 @@
         left: 50%;
         transform: translate(-50%);
         top: 20px;
-        /*background-color: rgba(255, 255, 255, 0.1);*/
-        /*border-radius: 0.25rem;*/
-        /*padding-top: 12px;*/
     }
 
     #newusercontent {
@@ -245,8 +279,36 @@
         justify-content: center;
     }
 
-    .errorcontainercontent {
+    .errorcontainercontent, .registercontainercontent {
         text-align: center;
+    }
+
+    .registercontainer {
+        position: absolute;
+        top: 72px;
+        bottom: 60px;
+        left: 7px;
+        right: 7px;
+        background-color: rgba(255,255,255, 0.1);
+        border-radius: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .registercontainercontent {
+        text-align: center;
+        animation: fadeInOut6 1s ease reverse forwards infinite
+    }
+
+    @keyframes fadeInOut6 {
+        0% { opacity: 0.4 }
+        50% { opacity: 0.8 }
+        100% { opacity: 0.4 }
+    }
+
+    .loading-text {
+        margin-bottom: 10px;
     }
 
     .filebutton {
@@ -317,12 +379,14 @@
     .visible {
         visibility: visible;
         opacity: 1;
+        z-index: 10;
         transition: visibility 0s linear 0s, opacity 0.35s linear;
     }
 
     .invisible {
         visibility: hidden;
         opacity: 0;
+        z-index: -10;
         transition: visibility 0s linear 0.35s, opacity 0.35s linear;
     }
 

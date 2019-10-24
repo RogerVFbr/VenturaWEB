@@ -1,11 +1,14 @@
 <template>
 
-    <div id="entrymodecontainer" class="container" :class="{ invisible: !visible, visible: visible }" v-if="Object.keys(data).length > 0">
+    <div id="entrymodecontainer"
+         class="container"
+         :class="{ invisible: !visible && !deleteConfirmation, visible: visible && !deleteConfirmation}"
+         v-if="Object.keys(data).length > 0">
 
-        <div class="row">
+        <div class="row" :class="{faded: deleteConfirmation}">
 
-            <div class="col s12 m4 l4">
-                <img :src="bucketUrl + data.img_info.s3_path_hash" alt="Smiley face" width="100%">
+            <div class="col s12 m4 l4 img-column">
+                <img :src="bucketUrl + data.img_info.s3_path_hash" alt="Use picture" width="100%">
             </div>
 
             <div class="col s12 m2 l2">
@@ -20,7 +23,7 @@
                 <small class="grey-text">Source IP</small>
                 <p class="card-text white-text">{{ data.identity.sourceIp }}</p>
                 <small class="grey-text">User Agent</small>
-                <p class="card-text white-text">{{ data.identity.userAgent }}</p>
+                <p class="card-text white-text truncate">{{ data.identity.userAgent }}</p>
                 <small class="grey-text">Reason</small>
                 <p class="card-text white-text">{{ data.reason }}</p>
             </div>
@@ -50,12 +53,22 @@
                 <div class="maploading" :class="{ invisible2: isIFrameLoaded, visible2: !isIFrameLoaded }">
                     <div class="maploadingcontent">
                         <div class="white-text loading-text">Loading map...</div>
-                        <div><font-awesome-icon icon="spinner" class="white-text" spin /></div>
+                        <div class="preloader-wrapper small active">
+                            <div class="spinner-layer spinner-green-only">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="gmap_canvas map-responsive" :class="{ invisible2: !isIFrameLoaded, visible2: isIFrameLoaded }">
-                    <iframe height="400"
+                <div class="gmap_canvas map-responsive" :class="{ invisible2: !isIFrameLoaded, visible2: isIFrameLoaded, buttondisabled: deleteConfirmation }">
+                    <iframe height="100%"
                             width="100%"
                             id="gmap_canvas"
                             :src="'https://maps.google.com/maps?q=' + data.identity.coordinates.lat + '%2C%20' +  data.identity.coordinates.lng + '&t=k&z=19&ie=UTF8&iwloc=&output=embed'"
@@ -63,7 +76,7 @@
                             scrolling="no"
                             marginheight="0"
                             marginwidth="0"
-                            @load="showMap()">
+                            @load="isIFrameLoaded = true">
                     </iframe>
                 </div>
 
@@ -71,28 +84,53 @@
 
         </div>
 
-        <div class="row closebuttonrow">
-            <div class="col s12 m12 l12">
-                <button class="waves-effect waves-light btn-small blue darken-2 closebutton" type="submit" @click="close()">Close</button>
+        <div class="row closebuttonrow" :class="{faded: deleteConfirmation}">
+
+            <div class="col s8 m8 l8 xl8">
+                <div v-if="showAdvancedControls">
+                    <button class="waves-effect waves-light btn-small yellow darken-3 changeimagebutton" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="close()">Change image</button>
+                    <button class="waves-effect waves-light btn-small red darken-4" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="deleteConfirmation = true">Delete user</button>
+                </div>
+            </div>
+
+            <div class="col s4 m4 l4 xl4">
+                <button class="waves-effect waves-light btn-small blue darken-2 right" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="close()">Close</button>
+                <div style="clear: both"></div>
             </div>
         </div>
+
+        <delete-user-container
+            :userId="data.userId"
+            :onDeleteComplete="onDatabaseUpdate"
+            :onClose="function() {deleteConfirmation = false}"
+            :visible="deleteConfirmation"
+        />
 
     </div>
 
 </template>
 
 <script>
+
+    import DeleteUserContainer from '@/components/DeleteUserContainer.vue'
+
     export default {
         name: "entry-mode-container",
+        components: {
+            DeleteUserContainer
+        },
         props: {
             data: {},
             bucketUrl: {},
             callback: {},
-            visible: {}
+            onReloadRequest: {},
+            visible: {},
+            showAdvancedControls: {}
         },
         data () {
             return {
-                isIFrameLoaded: false
+                isIFrameLoaded: false,
+                deleteConfirmation: false
             }
         },
         methods: {
@@ -109,16 +147,21 @@
                 return datetime[0] + ':' + datetime[1] + ':' + datetime[2]
             },
             close: function () {
-                this.callback();
+                if (this.callback) this.callback();
                 this.isIFrameLoaded = false;
+                this.deleteConfirmation = false;
             },
-            showMap: function () {
-                setTimeout(() => this.isIFrameLoaded = true, 0)
+            onDatabaseUpdate: function () {
+                if (this.callback) this.callback();
+                if (this.onReloadRequest) this.onReloadRequest();
+                this.isIFrameLoaded = false;
+                this.deleteConfirmation = false;
             }
         },
         watch: {
             visible: function(val) {
                 if (this.visible == false) return;
+                console.log(this.data);
                 this.isIFrameLoaded = false;
                 $('#gmap_canvas').attr(
                     'src',
@@ -160,6 +203,10 @@
         z-index: -1;
     }
 
+    .changeimagebutton {
+        margin-right: 10px;
+    }
+
     .maploadingcontent {
         text-align: center;
         animation: fadeInOut6 1s ease reverse forwards infinite
@@ -171,20 +218,21 @@
         100% { opacity: 0.4 }
     }
 
+    .img-column {
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .loading-text {
         margin-bottom: 10px;
     }
 
     .closebuttonrow {
         border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 9px;
         height: 42px;
-    }
-
-    .closebutton {
-        position: absolute;
-        top: 10px;
-        right: 0px;
-        margin-right: 10px;
     }
 
     .spacing {
@@ -207,9 +255,20 @@
         margin-bottom:  10px;
     }
 
+    .buttondisabled {
+        opacity: 0.2;
+        pointer-events: none
+    }
+
     .visible {
         visibility: visible;
         opacity: 1;
+        transition: visibility 0s linear 0s, opacity 0.35s linear;
+    }
+
+    .faded {
+        visibility: visible;
+        opacity: 0.05;
         transition: visibility 0s linear 0s, opacity 0.35s linear;
     }
 

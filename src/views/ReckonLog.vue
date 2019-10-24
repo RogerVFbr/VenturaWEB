@@ -30,7 +30,7 @@
     import LogCardsContainer from '@/components/LogCardsContainer.vue'
     import EntryModeContainer from '@/components/EntryModeContainer.vue'
     import { ADMIN_ENDPOINT_URL } from "../sensitivedata/aws";
-    import { bucketUrl } from "../sensitivedata/aws";
+    import { BUCKET_URL } from "../sensitivedata/aws";
     import { API_KEY } from "../sensitivedata/aws";
 
     export default {
@@ -42,7 +42,7 @@
         },
         data() {
             return {
-                bucket_url: bucketUrl,
+                bucket_url: BUCKET_URL,
                 isLoading: false,
                 reckonData: [],
                 entryMode: {

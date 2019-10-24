@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="input-field col s12 m4 l5 xl5">
                         <i id="useridicon" class="large material-icons prefix grey-text">account_circle</i>
-                        <input id="first_name" type="text" class="validate white-text" v-model="apiFilterOptions.userId">
+                        <input id="first_name" type="text" class="validate white-text" v-model="apiFilters.userId">
                         <label for="first_name">User Id</label>
                     </div>
                     <div class="input-field col s4 m1 l1 xl1 white-text" ref="myInput">
@@ -132,9 +132,7 @@
             buildMinuteSecondOptions: function () {
                 this.apiFilterOptions.minuteSecond = [];
                 this.apiFilters.minuteSecond = 'all';
-                for (let x = 0; x<=59; x++) {
-                    this.apiFilterOptions.minuteSecond.push(x);
-                }
+                for (let x = 0; x<=59; x++) this.apiFilterOptions.minuteSecond.push(x);
             },
             setYearToAll: function () {
                 this.apiFilters.year = 'all'

@@ -17,11 +17,15 @@
         <entry-mode-container :data="entryMode.data"
                               :bucketUrl="bucket_url"
                               :callback="setEntryModeInactive"
+                              :onReloadRequest="onNewUserSave"
                               :visible="entryMode.active && !showNewUserContainer"
+                              :showAdvancedControls="true"
+
         />
 
         <floating-action-button :show="showFloatingButton"
                                 :onclick="setShowAddContainer"
+                                class="pulse"
         />
 
         <new-user-container :onSave="onNewUserSave"
@@ -41,7 +45,7 @@
     import FloatingActionButton from '@/components/FloatingActionButton.vue'
     import NewUserContainer from '@/components/NewUserContainer.vue'
     import { ADMIN_ENDPOINT_URL } from "../sensitivedata/aws";
-    import { bucketUrl } from "../sensitivedata/aws";
+    import { BUCKET_URL } from "../sensitivedata/aws";
     import { API_KEY } from "../sensitivedata/aws";
 
     export default {
@@ -58,11 +62,12 @@
         },
         data() {
             return {
-                bucket_url: bucketUrl,
+                bucket_url: BUCKET_URL,
                 isLoading: false,
                 showFloatingButton: true,
                 showNewUserContainer: false,
                 reckonData: [],
+                lastRequestParams: {},
                 entryMode: {
                     active: false,
                     data: {}
@@ -71,6 +76,7 @@
         },
         methods: {
             loadData: function (request) {
+                this.lastRequestParams = request;
                 this.isLoading = true;
                 this.reckonData = [];
                 request.command = 'collections';
@@ -104,16 +110,16 @@
                 this.showFloatingButton = true;
             },
             setShowAddContainer: function () {
-                this.showFloatingButton = false;
                 this.showNewUserContainer = true;
+                this.showFloatingButton = false;
             },
-            onNewUserSave: function () {
+                onNewUserSave: function () {
                 this.showNewUserContainer = false;
                 this.showFloatingButton = true;
-                this.loadData();
+                this.loadData(this.lastRequestParams);
             },
             onAddContainerClose: function () {
-                this.showNewUserContainer=false;
+                this.showNewUserContainer = false;
                 this.showFloatingButton = true;
             }
         }

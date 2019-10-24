@@ -31,10 +31,6 @@
         opacity: 0;
     }
 
-    /*.floating-button:hover {*/
-    /*    background-color: ;*/
-    /*}*/
-
     .floating-button-icon {
         margin-top: 18px;
         font-size: 1.3rem;
@@ -77,7 +73,6 @@
     .showclass {
         animation-name: fadeIn;
         animation-duration: 1.7s;
-        animation-delay: .7s;
         animation-fill-mode: forwards;
         opacity: 0;
     }

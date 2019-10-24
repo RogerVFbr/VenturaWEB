@@ -17,8 +17,8 @@ let router = new Router({
     routes: [
         {
             path: '/',
-            name: 'contacts',
-            component: Contacts
+            name: 'users',
+            component: Users
 
         },
         {
