@@ -8,7 +8,10 @@
         <div class="row" :class="{faded: deleteConfirmation}">
 
             <div class="col s12 m4 l4 img-column">
-                <img :src="bucketUrl + data.img_info.s3_path_hash" alt="Use picture" width="100%">
+                <div class="userpicturecontainer">
+                    <img :src="bucketUrl + data.img_info.s3_path_hash" alt="User picture" width="100%">
+                    <div id="boundingbox"></div>
+                </div>
             </div>
 
             <div class="col s12 m2 l2">
@@ -161,12 +164,22 @@
         watch: {
             visible: function(val) {
                 if (this.visible == false) return;
-                console.log(this.data);
                 this.isIFrameLoaded = false;
                 $('#gmap_canvas').attr(
                     'src',
                     'https://maps.google.com/maps?q=' + this.data.identity.coordinates.lat + '%2C%20' +
                     this.data.identity.coordinates.lng + '&t=k&z=19&ie=UTF8&iwloc=&output=embed');
+
+                setTimeout(() => {
+                    $("#boundingbox").css({
+                        "top": (this.data.bounding_box.Top*100).toString() + '%',
+                        "left": (this.data.bounding_box.Left*100).toString() + '%',
+                        "width": (this.data.bounding_box.Width*100).toString() + '%',
+                        "height": (this.data.bounding_box.Height*100).toString() + '%',
+                    });
+                }, 100)
+
+
             }
         }
     }
@@ -223,6 +236,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .userpicturecontainer {
+        position: relative;
+    }
+
+    #boundingbox {
+        position: absolute;
+        border: 2px dotted rgba(255, 255, 255, 0.5);
+        border-radius: 0.25rem;
     }
 
     .loading-text {
