@@ -27,6 +27,7 @@
                 <p class="card-text white-text">{{ data.identity.sourceIp }}</p>
                 <small class="grey-text">User Agent</small>
                 <p class="card-text white-text truncate">{{ data.identity.userAgent }}</p>
+<!--                <a class="btn tooltipped" data-position="left" data-tooltip="I am a tooltip">Hover me!</a>-->
                 <small class="grey-text">Reason</small>
                 <p class="card-text white-text">{{ data.reason }}</p>
             </div>
@@ -130,7 +131,10 @@
             visible: {},
             showAdvancedControls: {}
         },
-        data () {
+        mounted() {
+            M.Tooltip.init(document.querySelectorAll('.tooltipped'));
+        },
+        data() {
             return {
                 isIFrameLoaded: false,
                 deleteConfirmation: false

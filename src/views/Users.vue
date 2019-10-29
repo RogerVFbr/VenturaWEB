@@ -91,7 +91,6 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        data.payload.sort((a, b) => (a.time > b.time) ? 1 : -1 )
                         this.reckonData = data.payload;
                         this.isLoading = false;
                     })
@@ -104,6 +103,7 @@
                 this.entryMode.data = entry;
                 this.entryMode.active = true;
                 this.showFloatingButton = false;
+                window.scrollTo(0, 0);
             },
             setEntryModeInactive: function () {
                 this.entryMode.active = false;

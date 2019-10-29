@@ -78,6 +78,7 @@
             selectEntry: function (entry) {
                 this.entryMode.data = entry;
                 this.entryMode.active = true;
+                window.scrollTo(0, 0);
             },
             setEntryModeInactive() {
                 this.entryMode.active = false;
