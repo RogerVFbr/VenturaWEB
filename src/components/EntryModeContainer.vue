@@ -9,7 +9,7 @@
 
             <div class="col s12 m4 l4 img-column">
                 <div class="userpicturecontainer">
-                    <img :src="bucketUrl + data.img_info.s3_path_hash" alt="User picture" width="100%">
+                    <img class="" :src="bucketUrl + data.img_info.s3_path_hash" alt="User picture" width="100%">
                     <div id="boundingbox"></div>
                 </div>
             </div>
@@ -133,6 +133,7 @@
         },
         mounted() {
             M.Tooltip.init(document.querySelectorAll('.tooltipped'));
+            M.Materialbox.init(document.querySelectorAll('.materialboxed'));
         },
         data() {
             return {
