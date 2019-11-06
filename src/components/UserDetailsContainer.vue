@@ -2,16 +2,32 @@
 
     <div id="entrymodecontainer"
          class="container"
-         :class="{ invisible: !visible && !deleteConfirmation, visible: visible && !deleteConfirmation}"
-         v-if="Object.keys(data).length > 0">
+         :class="{ invisible: !visible && !deleteConfirmation, visible: visible && !deleteConfirmation}">
 
-        <div class="row" :class="{faded: deleteConfirmation}">
+        <div class="row" :class="{faded: deleteConfirmation}" v-if="Object.keys(data).length > 0">
 
             <div class="col s12 m4 l4 img-column">
+
                 <div class="userpicturecontainer">
                     <img v-if="!imgVertical" class="horizontalImg" :src="bucketUrl + data.img_info.s3_path_hash" alt="User picture">
                     <img v-else class="verticalImg" :src="bucketUrl + data.img_info.s3_path_hash" alt="User picture">
                     <div id="boundingbox"></div>
+                    <div id="loadingregisters" :class="{ invisible2: isRegistersLoaded, visible2: !isRegistersLoaded }">
+                        <div class="white-text loading-text">Loading registers...</div>
+                        <div class="progress">
+                            <div class="indeterminate"></div>
+                        </div>
+                    </div>
+                    <div id="imagecounter"
+                         :class="{ invisible2: !isRegistersLoaded, visible2: isRegistersLoaded }">
+                        <small class="white-text">{{ index+1 }} / {{userRegisters.length}}</small>
+                    </div>
+                </div>
+                <div id="navigationbutton-left" :class="{ invisible2: !isRegistersLoaded, visible2: isRegistersLoaded }">
+                    <i class="waves-effect waves-light small material-icons white-text hoverable" @click="changeIndex(-1)">keyboard_arrow_left</i>
+                </div>
+                <div id="navigationbutton-right" :class="{ invisible2: !isRegistersLoaded, visible2: isRegistersLoaded }">
+                    <i class="waves-effect waves-light small material-icons white-text hoverable" @click="changeIndex(1)">keyboard_arrow_right</i>
                 </div>
             </div>
 
@@ -28,7 +44,7 @@
                 <p class="card-text white-text">{{ data.identity.sourceIp }}</p>
                 <small class="grey-text">User Agent</small>
                 <p class="card-text white-text truncate">{{ data.identity.userAgent }}</p>
-<!--                <a class="btn tooltipped" data-position="left" data-tooltip="I am a tooltip">Hover me!</a>-->
+                <!--                <a class="btn tooltipped" data-position="left" data-tooltip="I am a tooltip">Hover me!</a>-->
                 <small class="grey-text">Reason</small>
                 <p class="card-text white-text">{{ data.reason }}</p>
             </div>
@@ -92,40 +108,66 @@
         <div class="row closebuttonrow" :class="{faded: deleteConfirmation}">
 
             <div class="col s8 m8 l8 xl8">
-                <div v-if="showAdvancedControls">
-                    <button class="waves-effect waves-light btn-small yellow darken-3 changeimagebutton" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="close()">Change image</button>
-                    <button class="waves-effect waves-light btn-small red darken-4" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="deleteConfirmation = true">Delete user</button>
+                <div v-if="showAdvancedControls && Object.keys(data).length > 0">
+                    <button class="waves-effect waves-light btn-small teal darken-4 changeimagebutton"
+                            :class="{buttondisabled: deleteConfirmation}"
+                            type="submit"
+                            @click="close()">
+                        Add image
+                        <i class="material-icons right">image</i>
+                    </button>
+                    <button class="waves-effect waves-light btn-small yellow darken-3 changeimagebutton"
+                            :class="{buttondisabled: deleteConfirmation}"
+                            type="submit"
+                            @click="close()">
+                        Delete image
+                        <i class="material-icons right">delete</i>
+                    </button>
+                    <button class="waves-effect waves-light btn-small red darken-4"
+                            :class="{buttondisabled: deleteConfirmation}"
+                            type="submit"
+                            @click="deleteConfirmation = true">
+                        Delete user
+                        <i class="material-icons right">close</i>
+
+                    </button>
                 </div>
             </div>
 
             <div class="col s4 m4 l4 xl4">
-                <button class="waves-effect waves-light btn-small blue darken-2 right" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="close()">Close</button>
+                <button class="waves-effect waves-light btn-small blue darken-2 right" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="close()">
+                    Close
+                    <i class="material-icons right">close</i>
+                </button>
                 <div style="clear: both"></div>
             </div>
         </div>
 
         <delete-user-container
-            :userId="data.userId"
-            :onDeleteComplete="onDatabaseUpdate"
-            :onClose="function() {deleteConfirmation = false}"
-            :visible="deleteConfirmation"
+                :userId="data.userId"
+                :onDeleteComplete="onDatabaseUpdate"
+                :onClose="function() {deleteConfirmation = false}"
+                :visible="deleteConfirmation"
         />
 
     </div>
 
 </template>
 
+
 <script>
 
     import DeleteUserContainer from '@/components/DeleteUserContainer.vue'
+    import { ADMIN_ENDPOINT_URL } from "../sensitivedata/aws";
+    import { API_KEY } from "../sensitivedata/aws";
 
     export default {
-        name: "entry-mode-container",
+        name: "user-details-container",
         components: {
             DeleteUserContainer
         },
         props: {
-            data: {},
+            selection: {},
             bucketUrl: {},
             callback: {},
             onReloadRequest: {},
@@ -139,11 +181,75 @@
         data() {
             return {
                 isIFrameLoaded: false,
+                isRegistersLoaded: false,
                 deleteConfirmation: false,
-                imgVertical: false
+                imgVertical: false,
+                data: {},
+                userRegisters: [],
+                index: 0
             }
         },
         methods: {
+            loadUserRegisters: function () {
+                this.isRegistersLoaded = false;
+                this.userRegisters = [];
+
+                let request = {};
+                request.command = 'collectionById';
+                request.userId = this.data.userId;
+                request.table = '';
+
+                fetch(ADMIN_ENDPOINT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': API_KEY
+                    },
+                    body: JSON.stringify(request)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.userRegisters = data.payload.reverse();
+                        this.data = this.userRegisters[0];
+                        this.index = 0;
+                        this.isRegistersLoaded = true;
+                    })
+                    .catch(err => {
+                        console.error('Failed retrieving data : ' + err);
+                    })
+            },
+            changeIndex: function (change) {
+                this.index += change;
+                if (this.index<0) this.index = this.userRegisters.length-1;
+                else if (this.index>this.userRegisters.length-1) this.index = 0;
+                this.data = this.userRegisters[this.index];
+                this.loadGoogleMapsIframe();
+                this.acquireImageOrientation();
+                this.setBoundingBoxPosition();
+            },
+            acquireImageOrientation: function() {
+                let height = this.data.img_info.img_meta_data.dimensions.height;
+                let width = this.data.img_info.img_meta_data.dimensions.width;
+                if (height > width) this.imgVertical = true;
+                else this.imgVertical = false;
+            },
+            loadGoogleMapsIframe: function () {
+                this.isIFrameLoaded = false;
+                $('#gmap_canvas').attr(
+                    'src',
+                    'https://maps.google.com/maps?q=' + this.data.identity.coordinates.lat + '%2C%20' +
+                    this.data.identity.coordinates.lng + '&t=k&z=19&ie=UTF8&iwloc=&output=embed');
+            },
+            setBoundingBoxPosition: function () {
+                setTimeout(() => {
+                    $("#boundingbox").css({
+                        "top": (this.data.bounding_box.Top*100).toString() + '%',
+                        "left": (this.data.bounding_box.Left*100).toString() + '%',
+                        "width": (this.data.bounding_box.Width*100).toString() + '%',
+                        "height": (this.data.bounding_box.Height*100).toString() + '%',
+                    });
+                }, 100);
+            },
             getDateFromDateTime: function (datetime) {
                 datetime = datetime.split('-')
                 if (datetime.length<3) return 'N.A.'
@@ -158,6 +264,7 @@
             },
             close: function () {
                 if (this.callback) this.callback();
+                this.isRegistersLoaded = false;
                 this.isIFrameLoaded = false;
                 this.deleteConfirmation = false;
             },
@@ -171,34 +278,16 @@
         watch: {
             visible: function(val) {
                 if (this.visible == false) return;
-                this.isIFrameLoaded = false;
-                $('#gmap_canvas').attr(
-                    'src',
-                    'https://maps.google.com/maps?q=' + this.data.identity.coordinates.lat + '%2C%20' +
-                    this.data.identity.coordinates.lng + '&t=k&z=19&ie=UTF8&iwloc=&output=embed');
-
-                if (this.data.img_info.img_meta_data.dimensions.height >
-                    this.data.img_info.img_meta_data.dimensions.width) {
-                    this.imgVertical = true;
-                }
-                else {
-                    this.imgVertical = false;
-                }
-
-                setTimeout(() => {
-                    $("#boundingbox").css({
-                        "top": (this.data.bounding_box.Top*100).toString() + '%',
-                        "left": (this.data.bounding_box.Left*100).toString() + '%',
-                        "width": (this.data.bounding_box.Width*100).toString() + '%',
-                        "height": (this.data.bounding_box.Height*100).toString() + '%',
-                    });
-                }, 100)
-
-
+                this.data = this.selection;
+                this.loadGoogleMapsIframe();
+                this.acquireImageOrientation();
+                this.setBoundingBoxPosition();
+                this.loadUserRegisters()
             }
         }
     }
 </script>
+
 
 <style scoped>
 
@@ -263,12 +352,59 @@
 
     .userpicturecontainer {
         position: relative;
+        /*max-height: 400px;*/
     }
 
     #boundingbox {
         position: absolute;
         border: 2px dotted rgba(255, 255, 255, 0.5);
         border-radius: 0.25rem;
+    }
+
+    #loadingregisters {
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.5);
+        bottom: 0px;
+        width: 100%;
+        text-align: center;
+        padding-top: 5px;
+        border-radius: 0rem 0rem 0.25rem 0.25rem;
+    }
+
+    #loadingregisters .progress {
+        position: absolute;
+        bottom: 0px;
+        margin-bottom: 0px !important;
+        height: 3px !important;
+    }
+
+    #imagecounter {
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.5);
+        top: 5px;
+        right: 5px;
+        text-align: center;
+        padding: 2px;
+        border-radius: 0.25rem;
+    }
+
+    #navigationbutton-left, #navigationbutton-right {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 30px;
+        width: 30px;
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+
+    #navigationbutton-left{
+        left: 10px;
+    }
+
+    #navigationbutton-right {
+        right: 10px;
     }
 
     .loading-text {

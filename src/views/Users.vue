@@ -14,12 +14,12 @@
 
         />
 
-        <entry-mode-container :data="entryMode.data"
-                              :bucketUrl="bucket_url"
-                              :callback="setEntryModeInactive"
-                              :onReloadRequest="onNewUserSave"
-                              :visible="entryMode.active && !showNewUserContainer"
-                              :showAdvancedControls="true"
+        <user-details-container :selection="entryMode.data"
+                                :bucketUrl="bucket_url"
+                                :callback="setEntryModeInactive"
+                                :onReloadRequest="onNewUserSave"
+                                :visible="entryMode.active && !showNewUserContainer"
+                                :showAdvancedControls="true"
 
         />
 
@@ -41,7 +41,7 @@
 
     import FilterBar from '@/components/FilterBar.vue'
     import LogCardsContainer from '@/components/LogCardsContainer.vue'
-    import EntryModeContainer from '@/components/EntryModeContainer.vue'
+    import UserDetailsContainer from '@/components/UserDetailsContainer.vue'
     import FloatingActionButton from '@/components/FloatingActionButton.vue'
     import NewUserContainer from '@/components/NewUserContainer.vue'
     import { ADMIN_ENDPOINT_URL } from "../sensitivedata/aws";
@@ -53,7 +53,7 @@
         components: {
             FilterBar,
             LogCardsContainer,
-            EntryModeContainer,
+            UserDetailsContainer,
             FloatingActionButton,
             NewUserContainer
         },
