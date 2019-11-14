@@ -34,7 +34,7 @@
             <div class="col s12 m2 l2">
                 <small class="grey-text">User Id</small>
                 <p class="card-text white-text">{{ data.userId }}</p>
-                <small class="grey-text">Time</small>
+                <small class="grey-text">Time (UTC)</small>
                 <p class="card-text white-text">{{ getDateFromDateTime(data.time) }} {{ getTimeFromDateTime(data.time)}}</p>
                 <small class="grey-text">API Key Profile Name</small>
                 <p class="card-text white-text">{{ data.identity.apiKeyProfileName }}</p>
@@ -71,7 +71,11 @@
 
             <div class="col s12 m2 l2">
 
-                <div class="maploading" :class="{ invisible2: isIFrameLoaded, visible2: !isIFrameLoaded }">
+                <div id="coordinatesunavailable">
+                    <div class="white-text loading-text" v-if="'source' in data.identity.coordinates && data.identity.coordinates.source == 'N.A.'">Coordinates<br/>unavailable.</div>
+                </div>
+
+                <div class="maploading" :class="{ invisible2: isIFrameLoaded, visible2: !isIFrameLoaded }" v-if="data.identity.coordinates.source != 'N.A.'">
                     <div class="maploadingcontent">
                         <div class="white-text loading-text">Loading map...</div>
                         <div class="preloader-wrapper small active">
@@ -88,7 +92,8 @@
                     </div>
                 </div>
 
-                <div class="gmap_canvas map-responsive" :class="{ invisible2: !isIFrameLoaded, visible2: isIFrameLoaded, buttondisabled: deleteConfirmation }">
+                <div class="gmap_canvas map-responsive" :class="{ invisible2: !isIFrameLoaded, visible2: isIFrameLoaded, buttondisabled: deleteConfirmation }" v-if="data.identity.coordinates.source != 'N.A.'">
+                    <div id="coordssource" class="white-text" v-if="data.identity.coordinates.source == 'exif'">Source: Exif</div>
                     <iframe height="100%"
                             width="100%"
                             id="gmap_canvas"
@@ -211,6 +216,7 @@
                     .then(data => {
                         this.userRegisters = data.payload.reverse();
                         this.data = this.userRegisters[0];
+                        console.log(this.data);
                         this.index = 0;
                         this.isRegistersLoaded = true;
                     })
@@ -234,6 +240,7 @@
                 else this.imgVertical = false;
             },
             loadGoogleMapsIframe: function () {
+                if (this.data.identity.coordinates.lat == 'N.A.' || this.data.identity.coordinates.lng == 'N.A') return;
                 this.isIFrameLoaded = false;
                 $('#gmap_canvas').attr(
                     'src',
@@ -335,6 +342,30 @@
     .maploadingcontent {
         text-align: center;
         animation: fadeInOut6 1s ease reverse forwards infinite
+    }
+
+    #coordinatesunavailable {
+        position: absolute;
+        display: flex;
+        float:right;
+        align-items: center;
+        justify-content: center;
+        top: 0px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 0.25rem;
+        z-index: -1;
+    }
+
+    #coordssource {
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.5);
+        top: 0px;
+        right: 10px;
+        font-size: 0.7em;
+        padding: 0.3em;
     }
 
     @keyframes fadeInOut6 {

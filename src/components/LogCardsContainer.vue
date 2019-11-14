@@ -17,7 +17,7 @@
             </div>
 
             <div class="card-content white-text">
-                <p class="card-text">{{ reckon.userId }}</p>
+                <p class="card-text truncate">{{ reckon.userId }}</p>
             </div>
 
         </div>

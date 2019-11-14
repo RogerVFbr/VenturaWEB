@@ -18,7 +18,7 @@
             <div class="col s12 m2 l2">
                 <small class="grey-text">User Id</small>
                 <p class="card-text white-text">{{ data.userId }}</p>
-                <small class="grey-text">Time</small>
+                <small class="grey-text">Time (UTC)</small>
                 <p class="card-text white-text">{{ getDateFromDateTime(data.time) }} {{ getTimeFromDateTime(data.time)}}</p>
                 <small class="grey-text">API Key Profile Name</small>
                 <p class="card-text white-text">{{ data.identity.apiKeyProfileName }}</p>
