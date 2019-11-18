@@ -43,8 +43,8 @@
                         </div>
                     </div>
 
-                    <div class="registercontainer" :class="{ invisible: !registerContent.show, visible: registerContent.show }">
-                        <div class="registercontainercontent">
+                    <div class="messagecontainer" :class="{ invisible: !registerContent.show, visible: registerContent.show }">
+                        <div class="messagecontainercontent">
                             <div class="white-text loading-text">{{ registerContent.message }}</div>
                             <div class="preloader-wrapper small active">
                                 <div class="spinner-layer spinner-green-only">
@@ -279,11 +279,11 @@
         justify-content: center;
     }
 
-    .errorcontainercontent, .registercontainercontent {
+    .errorcontainercontent, .messagecontainercontent {
         text-align: center;
     }
 
-    .registercontainer {
+    .messagecontainer {
         position: absolute;
         top: 72px;
         bottom: 60px;
@@ -296,7 +296,7 @@
         justify-content: center;
     }
 
-    .registercontainercontent {
+    .messagecontainercontent {
         text-align: center;
         animation: fadeInOut6 1s ease reverse forwards infinite
     }

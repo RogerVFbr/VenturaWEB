@@ -22,14 +22,23 @@ Vue.component('Navbar', require('./components/Navbar.vue').default);
 Vue.config.productionTip = false
 
 let app;
-auth.onAuthStateChanged(() => {
-    if (!app) {
-        app = new Vue({
-            router,
-            render: h => h(App),
 
-        }).$mount('#app')
-    }
-});
+if (!app) {
+    app = new Vue({
+        router,
+        render: h => h(App),
+
+    }).$mount('#app')
+}
+
+// auth.onAuthStateChanged(() => {
+//     if (!app) {
+//         app = new Vue({
+//             router,
+//             render: h => h(App),
+//
+//         }).$mount('#app')
+//     }
+// });
 
 

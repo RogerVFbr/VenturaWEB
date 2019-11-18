@@ -7,6 +7,7 @@
                 <a href="#" data-target="mobile-demo" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><router-link to="/users" class="routerlinks">Users</router-link></li>
+                    <li><router-link to="/reckon" class="routerlinks">Reckon</router-link></li>
                     <!-- Dropdown Trigger -->
                     <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Logs<i class="material-icons right">arrow_drop_down</i></a></li>
                     <!-- Dropdown Structure -->
@@ -33,15 +34,15 @@
 
 <script>
 
-    import { auth } from '../sensitivedata/firebase';
+    // import { auth } from '../sensitivedata/firebase';
 
     export default {
         name: "navbar",
         created() {
-            if (auth.currentUser) {
-                this.isLogged = true;
-                this.userEmail = auth.currentUser.email;
-            }
+            // if (auth.currentUser) {
+            //     this.isLogged = true;
+            //     this.userEmail = auth.currentUser.email;
+            // }
         },
         mounted() {
             M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'));
