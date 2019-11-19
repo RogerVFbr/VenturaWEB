@@ -1,8 +1,8 @@
 <template>
 
-    <div id="cardscontainer" class="container" :class="{ invisible: !visible, visible: visible }" v-if="data.length">
+    <div id="cardscontainer" class="container" :class="{ invisible: !visible, visible: visible }" v-if="dataInner.length">
 
-        <div class="card evcard z-depth-3" v-for="reckon in data">
+        <div class="card evcard z-depth-3" v-for="reckon in dataInner">
 
             <div class="card-image" @click="callback(reckon)"   >
                 <img class="log-image" :src="bucketUrl + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
@@ -35,6 +35,11 @@
             callback: {},
             visible: {}
         },
+        data() {
+            return {
+                dataInner: [],
+            }
+        },
         methods: {
             getDateFromDateTime: function (datetime) {
                 datetime = datetime.split('-')
@@ -47,6 +52,38 @@
                 if (datetime.length<6) return 'N.A.'
                 datetime = datetime.slice(3, 7)
                 return datetime[0] + ':' + datetime[1] + ':' + datetime[2]
+            },
+            runCascadeEffectShow: function() {
+                this.dataInner = this.data;
+                setTimeout(() => {
+                    var elems = $('#cardscontainer').children();
+                    $(elems).each(function(index) {
+                        $(this).delay(50*index).animate({opacity: 1}, 200);
+                    });
+                }, 100);
+            },
+            runCascadeEffectHide: function() {
+                setTimeout(() => {
+                    var elems = $('#cardscontainer').children();
+                    $(elems).each(function(index) {
+                        $(this).delay(50*index).animate({opacity: 0}, 200);
+                    });
+                }, 100);
+
+            },
+        },
+
+        computed: {
+
+        },
+        watch: {
+            data: function (val) {
+                if (this.data.length !== 0) {
+                    this.runCascadeEffectShow();
+                }
+                else {
+                    this.runCascadeEffectHide();
+                }
             }
         }
     }
@@ -58,6 +95,10 @@
         padding: 0px;
         text-align: center;
         z-index: 100;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 0.25em;
+        padding-top: 10px;
+        padding-bottom: 7px;
     }
 
     #cardscontainer .card-content {
@@ -85,6 +126,7 @@
         margin-top: 0px !important;
         cursor: pointer;
         transition: all 0.2s ease;
+        opacity: 0;
     }
 
     .evcard:hover {

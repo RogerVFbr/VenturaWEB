@@ -1,43 +1,12 @@
 <template>
     <div id="reckonbarcontainer">
-        <div id="operationprogresscontainer" :class="{ invisible: !scene.fetchData || !visible, visible: scene.fetchData && visible }" class="container">
-            <div class="row">
-                <div class="col s2 m2 l4 xl4"></div>
-                    <div id="operationprogresscontent" class="col s8 m8 l4 xl4 z-depth-3">
-                        <div class="row titlerow">
-                            <div class="col s12 m12 l12">
-                                <h3 class="white-text">Reckon</h3>
-                            </div>
-                        </div>
-                        <div class="row formrow">
-                            <div class="messagecontainer">
-                                <div class="messagecontainercontent">
-                                    <div class="white-text loading-text"> {{scene.message}}</div>
-                                    <div class="preloader-wrapper small active">
-                                        <div class="spinner-layer spinner-green-only">
-                                            <div class="circle-clipper left">
-                                                <div class="circle"></div>
-                                            </div><div class="gap-patch">
-                                            <div class="circle"></div>
-                                        </div><div class="circle-clipper right">
-                                            <div class="circle"></div>
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                        </div>
-                    </div>
-                <div class="col s2 m2 l4 xl4"></div>
-            </div>
-        </div>
         <div id="filterbar" :class="{ invisible: scene.fetchData || !visible, visible: !scene.fetchData && visible }" class="container">
             <div class="row">
                 <form class="col s12">
                     <div class="row">
                         <div id="typeselectorcontainer" class="input-field col s4 m1 l2 xl2 white-text" ref="myInput">
-                            <select v-model="formData.type">
+                            <select v-model="formData.type" v-on:change="validateForm()">
                                 <option v-for="y in formOptions.type" :value="y" class="white-text">{{ y }}</option>
                             </select>
                             <label>Reckon type</label>
@@ -55,13 +24,13 @@
 
                         <div class="input-field col s12 m4 l4 xl4" :class="{ invisible: formData.type !== '1 to 1', visible: formData.type === '1 to 1'}">
                             <i id="useridicon" class="large material-icons prefix grey-text">account_circle</i>
-                            <input id="first_name" type="text" class="validate white-text" v-model="formData.userId" v-on:change="validateForm()">
+                            <input id="first_name" type="text" class="validate white-text" v-model="formData.userId" v-on:input="validateForm()">
                             <label for="first_name">User Id</label>
                         </div>
 
                         <div id="buttoncontainer" class="input-field col s4 m2 l2 xl2" ref="myInput">
                             <a id="reloadbutton"
-                               :class="{ buttondisabled: !formData.validated || !scene.fetchData}"
+                               :class="{ buttondisabled: !formData.validated}"
                                class="btn-large waves-effect waves-light purple darken-4 z-depth-3"
                                @click="reckon()">
                                 <p class="white-text">Reckon</p>
@@ -71,6 +40,55 @@
                 </form>
             </div>
         </div>
+
+        <div id="operationprogresscontainer" :class="{ invisible: !scene.fetchData || !visible, visible: scene.fetchData && visible }" class="container">
+            <div class="row">
+                <div class="col s2 m2 l4 xl4"></div>
+                <div id="operationprogresscontent" class="col s8 m8 l4 xl4 z-depth-3">
+                    <div class="row titlerow">
+                        <div class="col s12 m12 l12">
+                            <h3 class="white-text">Reckon</h3>
+                        </div>
+                    </div>
+                    <div class="row formrow">
+
+<!--                        <div class="messagecontainer">-->
+<!--                            <div class="messagecontainercontent">-->
+<!--                                <div class="white-text loading-text"> {{scene.operationProgressMessage}}</div>-->
+<!--                                <div class="preloader-wrapper small active">-->
+<!--                                    <div class="spinner-layer spinner-green-only">-->
+<!--                                        <div class="circle-clipper left">-->
+<!--                                            <div class="circle"></div>-->
+<!--                                        </div><div class="gap-patch">-->
+<!--                                        <div class="circle"></div>-->
+<!--                                    </div><div class="circle-clipper right">-->
+<!--                                        <div class="circle"></div>-->
+<!--                                    </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="errorcontainer">
+                            <div class="errorcontainercontent">
+                                <h4 class="white-text">Error</h4>
+                                <p class="white-text">{{scene.errorMessage}}</p>
+                            </div>
+                        </div>
+
+                        <div class="successcontainer">
+                            <div class="successcontainercontent">
+                                <h4 class="white-text">Error</h4>
+                                <p class="white-text">{{scene.errorMessage}}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col s2 m2 l4 xl4"></div>
+            </div>
+        </div>
+
     </div>
 
 
@@ -115,16 +133,24 @@
                 scene: {
                     fetchData: false,
                     operationProgress: false,
+                    operationProgressMessage: 'Reckon ...',
                     error: false,
-                    message: 'Reckon ...'
+                    errorMessage: 'Error',
+                    success: false,
                 }
+            }
+        },
+        watch: {
+            formData: function(val) {
+                console.log('change' + val);
+                this.validateForm();
             }
         },
         methods: {
             reckon: function () {
                 this.scene.fetchData = true;
                 this.scene.operationProgress = true;
-                this.scene.message = 'Reckon: encoding image...';
+                this.scene.operationProgressMessage = 'Reckon: encoding image...';
                 var file = document.querySelector('#file').files[0];
                 var reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -143,7 +169,7 @@
                 };
             },
             getGeolocation: function () {
-                this.registerContent.message = 'Reckon: acquiring coordinates...';
+                this.scene.operationProgressMessage = 'Reckon: acquiring coordinates...';
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(this.updateGeolocationOnRegistrationObject);
                 } else {
@@ -185,9 +211,9 @@
                     })
             },
             validateForm: function () {
-                console.log(this.formData.userId);
-                console.log(this.formData.type);
-                console.log(document.querySelector('#file').files[0]);
+                // console.log(this.formData.userId);
+                // console.log(this.formData.type);
+                // console.log(document.querySelector('#file').files[0]);
                 if (this.formData.userId === '' && this.formData.type === '1 to 1') {
                     this.formData.validated = false;
                     return;
@@ -234,23 +260,38 @@
         border-radius: 0.25rem;
     }
 
-    .messagecontainer {
+    .messagecontainer, .errorcontainer, successcontainer {
         position: absolute;
         top: 72px;
         bottom: 7px;
         left: 7px;
         right: 7px;
-        background-color: rgba(255,255,255, 0.1);
         border-radius: 0.25rem;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    .messagecontainercontent {
+    .messagecontainer {
+        background-color: rgba(255,255,255, 0.1);
+    }
+
+    .errorcontainer {
+        background-color: rgba(220,20,60, 0.5);
+    }
+
+    .successcontainer {
+        background-color: rgba(113, 220, 194, 0.5);
+    }
+
+    .messagecontainercontent,  .errorcontainercontent, .successcontainercontent{
         text-align: center;
+    }
+
+    .messagecontainercontent {
         animation: fadeInOut6 1s ease reverse forwards infinite
     }
+
 
     .titlerow {
         background-color: rgba(255, 255, 255, 0.1);
