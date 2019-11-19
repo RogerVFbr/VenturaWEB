@@ -52,34 +52,35 @@
                     </div>
                     <div class="row formrow">
 
-<!--                        <div class="messagecontainer">-->
-<!--                            <div class="messagecontainercontent">-->
-<!--                                <div class="white-text loading-text"> {{scene.operationProgressMessage}}</div>-->
-<!--                                <div class="preloader-wrapper small active">-->
-<!--                                    <div class="spinner-layer spinner-green-only">-->
-<!--                                        <div class="circle-clipper left">-->
-<!--                                            <div class="circle"></div>-->
-<!--                                        </div><div class="gap-patch">-->
-<!--                                        <div class="circle"></div>-->
-<!--                                    </div><div class="circle-clipper right">-->
-<!--                                        <div class="circle"></div>-->
-<!--                                    </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <div class="messagecontainer" :class="{ invisible: !scene.operationProgress, visible: scene.operationProgress }">
 
-                        <div class="errorcontainer">
+                            <div class="messagecontainercontent" :class="{ invisible: !scene.operationProgress, visible: scene.operationProgress }">
+                                <div class="white-text loading-text"> {{scene.operationProgressMessage}}</div>
+                                <div class="preloader-wrapper small active">
+                                    <div class="spinner-layer spinner-green-only">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="errorcontainer" :class="{ invisible: !scene.error, visible: scene.error }">
                             <div class="errorcontainercontent">
                                 <h4 class="white-text">Error</h4>
                                 <p class="white-text">{{scene.errorMessage}}</p>
                             </div>
                         </div>
 
-                        <div class="successcontainer">
+                        <div class="successcontainer" :class="{ invisible: !scene.success, visible: scene.success }">
                             <div class="successcontainercontent">
-                                <h4 class="white-text">Error</h4>
-                                <p class="white-text">{{scene.errorMessage}}</p>
+                                <h4 class="white-text">Success!</h4>
+                                <p class="white-text">{{scene.successMessage}}</p>
                             </div>
                         </div>
 
@@ -96,6 +97,10 @@
 
 
 <script>
+
+    import { RECKON_ENDPOINT_URL } from "../sensitivedata/aws";
+    import { API_KEY } from "../sensitivedata/aws";
+
     export default {
         name: "reckon-bar",
         props: {
@@ -137,13 +142,8 @@
                     error: false,
                     errorMessage: 'Error',
                     success: false,
+                    successMessage: 'Success'
                 }
-            }
-        },
-        watch: {
-            formData: function(val) {
-                console.log('change' + val);
-                this.validateForm();
             }
         },
         methods: {
@@ -182,12 +182,12 @@
                 this.buildRegistrationObject();
             },
             buildRegistrationObject: function () {
-                this.registerContent.message = 'Registering: requesting...';
-                this.reckonObject.reason = this.formData.reason;
+                this.scene.operationProgressMessage = 'Reckon: requesting...';
+                this.reckonObject.reason = 'Web client reckon request';
                 this.reckonObject.id = this.formData.userId;
                 this.reckonObject.image = this.formData.image;
 
-                fetch(REGISTER_ENDPOINT_URL, {
+                fetch(RECKON_ENDPOINT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -199,7 +199,7 @@
                     .then(data => {
                         console.log(data);
                         if (data.op_status && data.op_status == 'success')
-                            this.showRegisterSuccessful();
+                            this.showSuccess(data.message);
                         else if (data.op_status && data.op_status == 'failed' && data.message)
                             this.showError(data.message);
                         else
@@ -211,9 +211,6 @@
                     })
             },
             validateForm: function () {
-                // console.log(this.formData.userId);
-                // console.log(this.formData.type);
-                // console.log(document.querySelector('#file').files[0]);
                 if (this.formData.userId === '' && this.formData.type === '1 to 1') {
                     this.formData.validated = false;
                     return;
@@ -223,7 +220,31 @@
                     return;
                 }
                 this.formData.validated = true;
-            }
+            },
+            showError: function (msg) {
+                this.scene.errorMessage = msg;
+                this.scene.operationProgress = false;
+                this.scene.error = true;
+                setTimeout(() => {
+                    this.scene.fetchData = false;
+                }, 2000)
+                setTimeout(() => {
+                    this.scene.error = false;
+                    this.scene.success = false;
+                }, 2300)
+            },
+            showSuccess: function (msg) {
+                this.scene.successMessage = msg;
+                this.scene.operationProgress = false;
+                this.scene.success = true;
+                setTimeout(() => {
+                    this.scene.fetchData = false;
+                }, 3000)
+                setTimeout(() => {
+                    this.scene.error = false;
+                    this.scene.success = false;
+                }, 3300)
+            },
         }
     }
 </script>
@@ -260,7 +281,7 @@
         border-radius: 0.25rem;
     }
 
-    .messagecontainer, .errorcontainer, successcontainer {
+    .messagecontainer, .errorcontainer, .successcontainer {
         position: absolute;
         top: 72px;
         bottom: 7px;

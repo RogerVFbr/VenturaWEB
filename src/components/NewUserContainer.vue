@@ -189,7 +189,7 @@
                     .then(data => {
                         console.log(data);
                         if (data.op_status && data.op_status == 'success')
-                            this.showRegisterSuccessful();
+                            this.showSuccess();
                         else if (data.op_status && data.op_status == 'failed' && data.message)
                             this.showError(data.message);
                         else
@@ -215,7 +215,7 @@
                 }
                 this.formData.validated = true;
             },
-            showRegisterSuccessful: function () {
+            showSuccess: function () {
                 this.registerContent.message = 'Registration successful!';
                 setTimeout(() => {
                     this.onSave();
