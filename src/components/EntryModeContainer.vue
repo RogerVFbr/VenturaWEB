@@ -15,7 +15,7 @@
                 </div>
             </div>
 
-            <div class="col s12 m2 l2">
+            <div class="col s12 m2 l2 data-column-1">
                 <small class="grey-text">User Id</small>
                 <p class="card-text white-text">{{ data.userId }}</p>
                 <small class="grey-text">Time (UTC)</small>
@@ -33,7 +33,7 @@
                 <p class="card-text white-text">{{ data.reason }}</p>
             </div>
 
-            <div class="col s12 m2 l2">
+            <div class="col s12 m2 l2 data-column-2">
                 <small class="grey-text">Age Range</small>
                 <p class="card-text white-text">{{ data.face_details.AgeRange.Low }} - {{ data.face_details.AgeRange.High }}</p>
                 <small class="grey-text">Gender</small>
@@ -53,7 +53,7 @@
                 <div class="white-text">Size: {{ data.img_info.img_meta_data.size }} | Type: {{ data.img_info.img_meta_data.type }}</div>
             </div>
 
-            <div class="col s12 m2 l2">
+            <div class="col s12 m2 l2 map-column">
 
                 <div class="maploading" :class="{ invisible2: isIFrameLoaded, visible2: !isIFrameLoaded }">
                     <div class="maploadingcontent">
@@ -210,6 +210,18 @@
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 0.25rem;
         padding-top: 12px;
+    }
+
+    @media only screen and (max-width: 575px) {
+        #entrymodecontainer { width: 85%; }
+        .img-column { margin-bottom: 20px; }
+        .data-column-1 { margin-bottom: 15px; }
+        .data-column-2 { margin-bottom: 20px; }
+        .map-column { margin-bottom: 20px; }
+    }
+
+    @media only screen and (min-width: 576px) {
+
     }
 
     #entrymodecontainer img {

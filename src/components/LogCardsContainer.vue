@@ -2,7 +2,7 @@
 
     <div id="cardscontainer" class="container" :class="{ invisible: !visible, visible: visible }" v-if="dataInner.length">
 
-        <div class="card evcard z-depth-3" v-for="reckon in dataInner">
+        <div class="card evcard z-depth-3" v-for="reckon in dataInner.slice(displayLimits.start, displayLimits.limit)">
 
             <div class="card-image" @click="callback(reckon)"   >
                 <img class="log-image" :src="bucketUrl + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
@@ -22,6 +22,16 @@
 
         </div>
 
+        <div id="paginationcontainer">
+            <div id="paginationbuttonleft" class="waves-effect waves-light" @click="changePage(-1)">
+                <i class="tiny material-icons white-text">keyboard_arrow_left</i>
+            </div>
+            <small class="white-text">Items 1-14</small>
+            <div id="paginationbuttonright" class="waves-effect waves-light" @click="changePage(1)">
+                <i class="tiny material-icons white-text">keyboard_arrow_right</i>
+            </div>
+        </div>
+
     </div>
 
 </template>
@@ -38,9 +48,34 @@
         data() {
             return {
                 dataInner: [],
+                displayLimits: {
+                    limit: 14,
+                    start: 0,
+                }
             }
         },
         methods: {
+            changePage: function (move) {
+                console.log('changePage: ' + move);
+                if (move>0) {
+                    let newStart = this.start + this.limit;
+                    if (newStart>= this.dataInner.length-1) {
+                        this.displayLimits.start = 0;
+                    }
+                    else {
+                        this.displayLimits.start = newStart;
+                    }
+                }
+                else if (move<0) {
+                    let newStart = this.start - this.limit;
+                    if (newStart<=0) {
+                        this.displayLimits.start = (this.dataInner.length-1)-this.dataInner.length%this.displayLimits.limit;
+                    }
+                    else {
+                        this.displayLimits.start = newStart;
+                    }
+                }
+            },
             getDateFromDateTime: function (datetime) {
                 datetime = datetime.split('-')
                 if (datetime.length<3) return 'N.A.'
@@ -74,7 +109,9 @@
         },
 
         computed: {
-
+            computedData(){
+                return this.displayLimits.limit ? this.dataInner.slice(this.displayLimits.start,this.limit) : this.object
+            }
         },
         watch: {
             data: function (val) {
@@ -92,17 +129,49 @@
 <style scoped>
 
     #cardscontainer{
-        padding: 0px;
+        position: relative;
         text-align: center;
         z-index: 100;
         background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 0.25em;
-        padding-top: 10px;
+        border-radius: 0.25em 0em 0.25em 0.25em;
+        margin-top: 40px;
+        padding-top: 13px;
         padding-bottom: 7px;
     }
 
     #cardscontainer .card-content {
         padding: 5px !important;
+    }
+
+    #paginationcontainer{
+        position: absolute;
+        top: -20px;
+        right: 0px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 0.25em 0.25em 0em 0em;
+        width: 200px;
+        height: 20px;
+    }
+
+    #paginationbuttonleft, #paginationbuttonright{
+        background-color: rgba(255, 255, 255, 0.05);
+        height: 100%;
+        width: 40px;
+        padding-top: 2px;
+    }
+
+    #paginationbuttonleft:hover, #paginationbuttonright:hover{
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    #paginationbuttonleft{
+        border-radius: 0.25em 0em 0em 0em;
+        float: left;
+    }
+
+    #paginationbuttonright{
+        border-radius: 0em 0.25em 0em 0em;
+        float: right;
     }
 
     .imgcaption {
@@ -133,15 +202,6 @@
         transform: scale(1.01);
         background: rgba(250,250,250,0.15);
     }
-
-    /*.card .card-image .card-title {*/
-    /*    color: #fff;*/
-    /*    position: absolute;*/
-    /*    bottom: 0;*/
-    /*    left: 0;*/
-    /*    max-width: 100%;*/
-    /*    padding: 0px 0px 0px 10px;*/
-    /*}*/
 
     .log-image {
         object-fit: cover;

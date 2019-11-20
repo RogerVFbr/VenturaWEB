@@ -5,14 +5,15 @@
             <div class="row">
                 <form class="col s12">
                     <div class="row">
-                        <div id="typeselectorcontainer" class="input-field col s4 m1 l2 xl2 white-text" ref="myInput">
+
+                        <div id="typeselectorcontainer" class="input-field col s4 m2 l2 xl2 white-text" ref="myInput">
                             <select v-model="formData.type" v-on:change="validateForm()">
                                 <option v-for="y in formOptions.type" :value="y" class="white-text">{{ y }}</option>
                             </select>
                             <label>Reckon type</label>
                         </div>
 
-                        <div class="file-field input-field col s12 m6 l4 xl4">
+                        <div class="file-field input-field col s12 m10 l4 xl4">
                             <div class="waves-effect waves-light btn-small grey darken-2 filebutton">
                                 <span>File</span>
                                 <input id="file" type="file" v-on:change="validateForm()">
@@ -22,13 +23,13 @@
                             </div>
                         </div>
 
-                        <div class="input-field col s12 m4 l4 xl4" :class="{ invisible: formData.type !== '1 to 1', visible: formData.type === '1 to 1'}">
+                        <div class="input-field col s12 m9 l4 xl4" :class="{ invisible: formData.type !== '1 to 1', visible: formData.type === '1 to 1'}">
                             <i id="useridicon" class="large material-icons prefix grey-text">account_circle</i>
                             <input id="first_name" type="text" class="validate white-text" v-model="formData.userId" v-on:input="validateForm()">
                             <label for="first_name">User Id</label>
                         </div>
 
-                        <div id="buttoncontainer" class="input-field col s4 m2 l2 xl2" ref="myInput">
+                        <div id="buttoncontainer" class="input-field col s4 m3 l2 xl2" ref="myInput">
                             <a id="reloadbutton"
                                :class="{ buttondisabled: !formData.validated}"
                                class="btn-large waves-effect waves-light purple darken-4 z-depth-3"
@@ -36,6 +37,7 @@
                                 <p class="white-text">Reckon</p>
                             </a>
                         </div>
+
                     </div>
                 </form>
             </div>

@@ -141,4 +141,11 @@
         opacity: 1;
     }
 
+    @media only screen and (max-width: 600px) {
+        .extramargin {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    }
+
 </style>

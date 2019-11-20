@@ -125,10 +125,22 @@
 
 <style scoped>
 
-    .content {
-        margin-top: 20px;
-        padding-bottom: 50px;
-        width: 100%;
+    @media only screen and (max-width: 575px) {
+        .content {
+            margin-top: 20px;
+            padding-bottom: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+        }
+    }
+
+    @media only screen and (min-width: 576px) {
+        .content {
+            margin-top: 20px;
+            padding-bottom: 50px;
+            width: 100%;
+        }
     }
 
 </style>
