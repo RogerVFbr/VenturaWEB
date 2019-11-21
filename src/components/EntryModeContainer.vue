@@ -15,7 +15,7 @@
                 </div>
             </div>
 
-            <div class="col s12 m2 l2 data-column-1">
+            <div class="col s12 m2 l2 data-column-1 ">
                 <small class="grey-text">User Id</small>
                 <p class="card-text white-text">{{ data.userId }}</p>
                 <small class="grey-text">Time (UTC)</small>

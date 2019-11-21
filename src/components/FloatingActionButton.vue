@@ -71,6 +71,7 @@
     }
 
     .showclass {
+        z-index: 1000;
         animation-name: fadeIn;
         animation-duration: 1.7s;
         animation-fill-mode: forwards;
@@ -78,6 +79,7 @@
     }
 
     .hideclass {
+        z-index: -1000;
         animation-name: fadeOut;
         animation-duration: 0.25s;
         animation-fill-mode: forwards;

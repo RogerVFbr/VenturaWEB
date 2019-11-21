@@ -112,6 +112,7 @@
             setShowAddContainer: function () {
                 this.showNewUserContainer = true;
                 this.showFloatingButton = false;
+                window.scrollTo(0, 0);
             },
                 onNewUserSave: function () {
                 this.showNewUserContainer = false;

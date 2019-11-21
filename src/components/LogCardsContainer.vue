@@ -2,7 +2,7 @@
 
     <div id="cardscontainer" class="container" :class="{ invisible: !visible, visible: visible }" v-if="dataInner.length">
 
-        <div class="card evcard z-depth-3" v-for="reckon in dataInner.slice(displayLimits.start, displayLimits.limit)">
+        <div class="card evcard z-depth-3" v-for="reckon in computedData">
 
             <div class="card-image" @click="callback(reckon)"   >
                 <img class="log-image" :src="bucketUrl + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
@@ -22,14 +22,16 @@
 
         </div>
 
-        <div id="paginationcontainer">
-            <div id="paginationbuttonleft" class="waves-effect waves-light" @click="changePage(-1)">
+        <div class="paginationcontainer">
+            <div class="paginationbuttonleft waves-effect waves-light" @click="changePage(-1)">
                 <i class="tiny material-icons white-text">keyboard_arrow_left</i>
             </div>
-            <small class="white-text">Items 1-14</small>
-            <div id="paginationbuttonright" class="waves-effect waves-light" @click="changePage(1)">
+            <div class="paginationbuttonright waves-effect waves-light" @click="changePage(1)">
                 <i class="tiny material-icons white-text">keyboard_arrow_right</i>
             </div>
+            <div class="spacer hide-on-med-and-up"></div>
+            <small class="white-text paginationcaption">Items {{displayLimits.start}}-{{displayLimits.start+displayLimits.limit-1}} of {{dataInner.length}}</small>
+
         </div>
 
     </div>
@@ -56,10 +58,9 @@
         },
         methods: {
             changePage: function (move) {
-                console.log('changePage: ' + move);
                 if (move>0) {
-                    let newStart = this.start + this.limit;
-                    if (newStart>= this.dataInner.length-1) {
+                    let newStart = this.displayLimits.start + this.displayLimits.limit;
+                    if (newStart>= this.dataInner.length) {
                         this.displayLimits.start = 0;
                     }
                     else {
@@ -67,14 +68,16 @@
                     }
                 }
                 else if (move<0) {
-                    let newStart = this.start - this.limit;
-                    if (newStart<=0) {
-                        this.displayLimits.start = (this.dataInner.length-1)-this.dataInner.length%this.displayLimits.limit;
+                    if (this.dataInner.length === this.displayLimits.limit) return;
+                    let newStart = this.displayLimits.start - this.displayLimits.limit;
+                    if (newStart<0) {
+                        this.displayLimits.start = (this.dataInner.length)-this.dataInner.length%this.displayLimits.limit;
                     }
                     else {
                         this.displayLimits.start = newStart;
                     }
                 }
+                this.runCascadeEffectShow();
             },
             getDateFromDateTime: function (datetime) {
                 datetime = datetime.split('-')
@@ -110,7 +113,7 @@
 
         computed: {
             computedData(){
-                return this.displayLimits.limit ? this.dataInner.slice(this.displayLimits.start,this.limit) : this.object
+                return this.dataInner.slice(this.displayLimits.start, this.displayLimits.start+this.displayLimits.limit);
             }
         },
         watch: {
@@ -120,6 +123,7 @@
                 }
                 else {
                     this.runCascadeEffectHide();
+                    this.displayLimits.start = 0;
                 }
             }
         }
@@ -143,33 +147,62 @@
         padding: 5px !important;
     }
 
-    #paginationcontainer{
+    @media only screen and (max-width: 575px) {
+        .paginationcontainer{
+            height: 40px !important;
+            top: -40px !important;
+        }
+        .paginationcaption {
+            margin: 0px !important;
+            padding: 0px !important;
+        }
+        #cardscontainer{
+            margin-top: 60px !important;
+        }
+
+        .paginationbuttonleft, .paginationbuttonright{
+            padding-top: 10px !important;
+        }
+    }
+
+    @media only screen and (min-width: 576px) {
+
+    }
+
+    .spacer {
+        /*background-color: #2c3e50;*/
+        height: 10px;
+        width: 10px;
+        margin: auto;
+    }
+
+    .paginationcontainer{
         position: absolute;
         top: -20px;
         right: 0px;
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 0.25em 0.25em 0em 0em;
-        width: 200px;
+        width: 210px;
         height: 20px;
     }
 
-    #paginationbuttonleft, #paginationbuttonright{
+    .paginationbuttonleft, .paginationbuttonright{
         background-color: rgba(255, 255, 255, 0.05);
         height: 100%;
         width: 40px;
         padding-top: 2px;
     }
 
-    #paginationbuttonleft:hover, #paginationbuttonright:hover{
+    .paginationbuttonleft:hover, .paginationbuttonright:hover{
         background-color: rgba(255, 255, 255, 0.2);
     }
 
-    #paginationbuttonleft{
+    .paginationbuttonleft{
         border-radius: 0.25em 0em 0em 0em;
         float: left;
     }
 
-    #paginationbuttonright{
+    .paginationbuttonright{
         border-radius: 0em 0.25em 0em 0em;
         float: right;
     }

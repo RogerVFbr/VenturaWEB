@@ -24,13 +24,13 @@
             </div>
         </div>
         <ul class="sidenav purple darken-4" id="mobile-demo">
-            <li><router-link to="/users" class="routerlinks">Users</router-link></li>
-            <li><router-link to="/reckon" class="routerlinks">Reckon</router-link></li>
+            <li><a class="routerlinks" @click="sideNavbarNavigate('users')">Users</a></li>
+            <li><a class="routerlinks" @click="sideNavbarNavigate('reckon')">Reckon</a></li>
             <li><div class="divider"></div></li>
             <li><a class="subheader">Logs</a></li>
-            <li><router-link to="/register-log" class="routerlinks">Registrations</router-link></li>
-            <li><router-link to="/reckon-log-success" class="routerlinks">Successful reckons</router-link></li>
-            <li><router-link to="/reckon-log-fail" class="routerlinks">Failed reckons</router-link></li>
+            <li><a class="routerlinks" @click="sideNavbarNavigate('register-log')">Registrations</a></li>
+            <li><a class="routerlinks" @click="sideNavbarNavigate('reckon-log-success')">Successful reckons</a></li>
+            <li><a class="routerlinks" @click="sideNavbarNavigate('reckon-log-fail')">Failed reckons</a></li>
         </ul>
 <!--        <ul id="slide-out" class="sidenav">-->
 <!--            <li><div class="user-view">-->
@@ -66,20 +66,30 @@
         },
         mounted() {
             M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'));
-            M.Sidenav.init(document.querySelectorAll('.sidenav'))
+            this.sideBarInstance = M.Sidenav.init(document.querySelectorAll('.sidenav'));
+            console.log(this.sideBarInstance);
         },
         data() {
             return {
                 isLogged: false,
                 userEmail: '',
+                sideBarInstance: ''
 
             }
         },
         methods: {
-            logout: function () {
-                auth.signOut().then(() => {
-                    this.$router.go({path: this.$router.path});
-                })
+            // logout: function () {
+            //     auth.signOut().then(() => {
+            //         this.$router.go({path: this.$router.path});
+            //     })
+            // },
+            sideNavbarNavigate: function (dest) {
+                var elem = document.querySelector('.sidenav');
+                var instance = M.Sidenav.getInstance(elem);
+                instance.close();
+                setTimeout(() => {
+                    this.$router.push({path: dest});
+                }, 200)
             }
         }
     }

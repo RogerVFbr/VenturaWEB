@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <div class="col s12 m2 l2">
+            <div class="col s12 m2 l2 data-column-1">
                 <small class="grey-text">User Id</small>
                 <p class="card-text white-text">{{ data.userId }}</p>
                 <small class="grey-text">Time (UTC)</small>
@@ -49,7 +49,7 @@
                 <p class="card-text white-text">{{ data.reason }}</p>
             </div>
 
-            <div class="col s12 m2 l2">
+            <div class="col s12 m2 l2 data-column-2">
                 <small class="grey-text">Age Range</small>
                 <p class="card-text white-text">{{ data.face_details.AgeRange.Low }} - {{ data.face_details.AgeRange.High }}</p>
                 <small class="grey-text">Gender</small>
@@ -69,7 +69,7 @@
                 <div class="white-text">Size: {{ data.img_info.img_meta_data.size }} | Type: {{ data.img_info.img_meta_data.type }}</div>
             </div>
 
-            <div class="col s12 m2 l2">
+            <div class="col s12 m2 l2 map-column">
 
                 <div id="coordinatesunavailable">
                     <div class="white-text loading-text" v-if="'source' in data.identity.coordinates && data.identity.coordinates.source == 'N.A.'">Coordinates<br/>unavailable.</div>
@@ -112,37 +112,40 @@
 
         <div class="row closebuttonrow" :class="{faded: deleteConfirmation}">
 
-            <div class="col s8 m8 l8 xl8">
+            <div class="col s10 m10 l10 xl10">
                 <div v-if="showAdvancedControls && Object.keys(data).length > 0">
                     <button class="waves-effect waves-light btn-small teal darken-4 changeimagebutton"
                             :class="{buttondisabled: deleteConfirmation}"
                             type="submit"
                             @click="close()">
-                        Add image
-                        <i class="material-icons right">image</i>
+                        <i class="material-icons">exposure_plus_1</i>
+                        <i class="material-icons">image</i>
                     </button>
                     <button class="waves-effect waves-light btn-small yellow darken-3 changeimagebutton"
                             :class="{buttondisabled: deleteConfirmation}"
                             type="submit"
                             @click="close()">
-                        Delete image
-                        <i class="material-icons right">delete</i>
+                        <i class="material-icons">exposure_minus_1</i>
+                        <i class="material-icons">image</i>
                     </button>
                     <button class="waves-effect waves-light btn-small red darken-4"
                             :class="{buttondisabled: deleteConfirmation}"
                             type="submit"
-                            @click="deleteConfirmation = true">
-                        Delete user
-                        <i class="material-icons right">close</i>
+                            @click="openDeleteConfirmationDialog">
+                        <i class="material-icons">delete</i>
+                        <i class="material-icons">account_circle</i>
 
                     </button>
                 </div>
             </div>
 
-            <div class="col s4 m4 l4 xl4">
-                <button class="waves-effect waves-light btn-small blue darken-2 right" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="close()">
+            <div class="col s2 m2 l2 xl2">
+                <button class="waves-effect waves-light btn-small blue darken-2 right hide-on-small-only" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="close()">
                     Close
                     <i class="material-icons right">close</i>
+                </button>
+                <button class="waves-effect waves-light btn-small blue darken-2 right hide-on-med-and-up" :class="{buttondisabled: deleteConfirmation}" type="submit" @click="close()">
+                    <i class="material-icons">close</i>
                 </button>
                 <div style="clear: both"></div>
             </div>
@@ -269,11 +272,16 @@
                 datetime = datetime.slice(3, 7)
                 return datetime[0] + ':' + datetime[1] + ':' + datetime[2]
             },
+            openDeleteConfirmationDialog: function() {
+                this.deleteConfirmation = true;
+                window.scrollTo(0, 0);
+            },
             close: function () {
                 if (this.callback) this.callback();
                 this.isRegistersLoaded = false;
                 this.isIFrameLoaded = false;
                 this.deleteConfirmation = false;
+                window.scrollTo(0, 0);
             },
             onDatabaseUpdate: function () {
                 if (this.callback) this.callback();
@@ -306,6 +314,27 @@
         background-color: rgba(255, 255, 255, 0.1);
         border-radius: 0.25rem;
         padding-top: 12px;
+    }
+
+    @media only screen and (max-width: 575px) {
+        #entrymodecontainer { width: 85%; }
+        .userpicturecontainer { margin-bottom: 20px; }
+        .data-column-1 { margin-bottom: 15px; }
+        .data-column-2 { margin-bottom: 20px; }
+        .map-column { margin-bottom: 20px; }
+        .closebuttonrow {
+            height: 70px !important;
+        }
+        .closebuttonrow button {
+            width: 60px !important;
+            height: 60px !important;
+            padding: 1px 0px 0px 0px !important;
+            border-radius: 0.5rem;
+        }
+    }
+
+    @media only screen and (min-width: 576px) {
+
     }
 
     #entrymodecontainer img {
