@@ -5,7 +5,20 @@
         <div class="card evcard z-depth-3" v-for="reckon in computedData">
 
             <div class="card-image" @click="callback(reckon)"   >
-                <img class="log-image" :src="bucketUrl + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">
+                <div class="imagecontainer">
+                    <img v-if="reckon.img_info.img_meta_data.dimensions.height>reckon.img_info.img_meta_data.dimensions.width"
+                         class="log-image highimage"
+                         :src="bucketUrl + reckon.img_info.s3_path_hash"
+                         alt="Identity entry">
+<!--                         v-bind:style="{ transform: 'translateY(' + reckon.bounding_box.Top*100 + '%)' }">-->
+<!--                         :style="transform: translateY({{reckon.bounding_box.Top}})"/>-->
+                    <img v-else
+                         class="log-image wideimage"
+                         :src="bucketUrl + reckon.img_info.s3_path_hash"
+                         alt="Identity entry"
+                         />
+                </div>
+<!--                <img class="log-image" :src="bucketUrl + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">-->
                 <div class="imgcaption">
                     <div class="left">
                         {{ getDateFromDateTime(reckon.time) }}
@@ -93,6 +106,7 @@
             },
             runCascadeEffectShow: function() {
                 this.dataInner = this.data;
+                // this.imageSkew();
                 setTimeout(() => {
                     var elems = $('#cardscontainer').children();
                     $(elems).each(function(index) {
@@ -109,6 +123,12 @@
                 }, 100);
 
             },
+            // imageSkew: function() {
+            //     var elems = $('.imagecontainer').children();
+            //     console.log(elems);
+            //     // $(elems).each(function(index) {
+            //     //     $(this).delay(50*index).animate({opacity: 0}, 200);
+            // }
         },
 
         computed: {
@@ -118,6 +138,7 @@
         },
         watch: {
             data: function (val) {
+                console.log(this.data);
                 if (this.data.length !== 0) {
                     this.runCascadeEffectShow();
                 }
@@ -236,8 +257,35 @@
         background: rgba(250,250,250,0.15);
     }
 
+    .imagecontainer{
+        position:relative;
+        overflow: hidden;
+        height: 150px;
+        width: 100%;
+        /*background-color: white;*/
+
+    }
+
     .log-image {
-        object-fit: cover;
+        position: absolute;
+        /*top: -200px;*/
+        /*transform: translateY(-50%);*/
+        /*left: 100%;*/
+        /*height: 200%;*/
+        /*object-fit: cover;*/
+        /*height: 100%;*/
+        /*width: 100%;*/
+        /*transform: translateY(-25%);*/
+    }
+
+    .highimage {
+        max-width:100%;
+        height:auto;
+    }
+
+    .wideimage {
+        width:auto !important;
+        height: 100%;
     }
 
     .card .content small {
