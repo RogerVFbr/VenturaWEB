@@ -72,10 +72,10 @@
             <div class="col s12 m2 l2 map-column">
 
                 <div id="coordinatesunavailable">
-                    <div class="white-text loading-text" v-if="'source' in data.identity.coordinates && data.identity.coordinates.source == 'N.A.'">Coordinates<br/>unavailable.</div>
+                    <div class="white-text loading-text" v-if="!mapRenderCondition">Coordinates<br/>unavailable.</div>
                 </div>
 
-                <div class="maploading" :class="{ invisible2: isIFrameLoaded, visible2: !isIFrameLoaded }" v-if="data.identity.coordinates.source != 'N.A.'">
+                <div class="maploading" :class="{ invisible2: isIFrameLoaded, visible2: !isIFrameLoaded }" v-if="mapRenderCondition">
                     <div class="maploadingcontent">
                         <div class="white-text loading-text">Loading map...</div>
                         <div class="preloader-wrapper small active">
@@ -92,8 +92,8 @@
                     </div>
                 </div>
 
-                <div class="gmap_canvas map-responsive" :class="{ invisible2: !isIFrameLoaded, visible2: isIFrameLoaded, buttondisabled: deleteConfirmation }" v-if="data.identity.coordinates.source != 'N.A.'">
-                    <div id="coordssource" class="white-text" v-if="data.identity.coordinates.source == 'exif'">Source: Exif</div>
+                <div class="gmap_canvas map-responsive" :class="{ invisible2: !isIFrameLoaded, visible2: isIFrameLoaded, buttondisabled: deleteConfirmation }" v-if="mapRenderCondition">
+                    <div id="coordssource" class="white-text" v-if="data.identity.coordinates.source === 'exif'">Source: Exif</div>
                     <iframe height="100%"
                             width="100%"
                             id="gmap_canvas"
@@ -219,7 +219,6 @@
                     .then(data => {
                         this.userRegisters = data.payload.reverse();
                         this.data = this.userRegisters[0];
-                        console.log(this.data);
                         this.index = 0;
                         this.isRegistersLoaded = true;
                     })
@@ -288,12 +287,28 @@
                 if (this.onReloadRequest) this.onReloadRequest();
                 this.isIFrameLoaded = false;
                 this.deleteConfirmation = false;
+            },
+
+        },
+        computed: {
+            mapRenderCondition: function() {
+                var returnBool = true;
+                if ('source' in this.selection.identity.coordinates && this.selection.identity.coordinates.source === 'N.A.') {
+                    returnBool = false;
+                }
+                else if ('source' in this.selection.identity.coordinates && this.selection.identity.coordinates.source === 'device') {
+                    if (this.selection.identity.coordinates.lat === "-50.000" && this.selection.identity.coordinates.lng === "-23.0000") {
+                        returnBool = false;
+                    }
+                }
+                return returnBool;
             }
         },
         watch: {
             visible: function(val) {
                 if (this.visible == false) return;
                 this.data = this.selection;
+                console.log(this.data);
                 this.loadGoogleMapsIframe();
                 this.acquireImageOrientation();
                 this.setBoundingBoxPosition();

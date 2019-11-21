@@ -67,7 +67,6 @@
         mounted() {
             M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'));
             this.sideBarInstance = M.Sidenav.init(document.querySelectorAll('.sidenav'));
-            console.log(this.sideBarInstance);
         },
         data() {
             return {

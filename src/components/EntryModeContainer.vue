@@ -55,7 +55,11 @@
 
             <div class="col s12 m2 l2 map-column">
 
-                <div class="maploading" :class="{ invisible2: isIFrameLoaded, visible2: !isIFrameLoaded }">
+                <div id="coordinatesunavailable">
+                    <div class="white-text loading-text" v-if="!mapRenderCondition">Coordinates<br/>unavailable.</div>
+                </div>
+
+                <div class="maploading" :class="{ invisible2: isIFrameLoaded, visible2: !isIFrameLoaded }" v-if="mapRenderCondition">
                     <div class="maploadingcontent">
                         <div class="white-text loading-text">Loading map...</div>
                         <div class="preloader-wrapper small active">
@@ -72,7 +76,7 @@
                     </div>
                 </div>
 
-                <div class="gmap_canvas map-responsive" :class="{ invisible2: !isIFrameLoaded, visible2: isIFrameLoaded, buttondisabled: deleteConfirmation }">
+                <div class="gmap_canvas map-responsive" :class="{ invisible2: !isIFrameLoaded, visible2: isIFrameLoaded, buttondisabled: deleteConfirmation }" v-if="mapRenderCondition">
                     <iframe height="100%"
                             width="100%"
                             id="gmap_canvas"
@@ -168,9 +172,24 @@
                 this.deleteConfirmation = false;
             }
         },
+        computed: {
+            mapRenderCondition: function() {
+                var returnBool = true;
+                if ('source' in this.data.identity.coordinates && this.data.identity.coordinates.source === 'N.A.') {
+                    returnBool = false;
+                }
+                else if ('source' in this.data.identity.coordinates && this.data.identity.coordinates.source === 'device') {
+                    if (this.data.identity.coordinates.lat === "-50.000" && this.data.identity.coordinates.lng === "-23.0000") {
+                        returnBool = false;
+                    }
+                }
+                return returnBool;
+            }
+        },
         watch: {
             visible: function(val) {
                 if (this.visible == false) return;
+                console.log(this.data);
                 this.isIFrameLoaded = false;
                 $('#gmap_canvas').attr(
                     'src',
@@ -275,6 +294,21 @@
 
     .userpicturecontainer {
         position: relative;
+    }
+
+    #coordinatesunavailable {
+        position: absolute;
+        display: flex;
+        float:right;
+        align-items: center;
+        justify-content: center;
+        top: 0px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 0.25rem;
+        z-index: -1;
     }
 
     #boundingbox {

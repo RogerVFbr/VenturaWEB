@@ -9,9 +9,9 @@
                     <img v-if="reckon.img_info.img_meta_data.dimensions.height>reckon.img_info.img_meta_data.dimensions.width"
                          class="log-image highimage"
                          :src="bucketUrl + reckon.img_info.s3_path_hash"
-                         alt="Identity entry">
-<!--                         v-bind:style="{ transform: 'translateY(' + reckon.bounding_box.Top*100 + '%)' }">-->
-<!--                         :style="transform: translateY({{reckon.bounding_box.Top}})"/>-->
+                         alt="Identity entry"
+                         v-bind:style="{
+                            transform: 'translate(-' + translationX(reckon)*100 + '%, -' + translationY(reckon)*100 + '%)'}">
                     <img v-else
                          class="log-image wideimage"
                          :src="bucketUrl + reckon.img_info.s3_path_hash"
@@ -123,12 +123,17 @@
                 }, 100);
 
             },
-            // imageSkew: function() {
-            //     var elems = $('.imagecontainer').children();
-            //     console.log(elems);
-            //     // $(elems).each(function(index) {
-            //     //     $(this).delay(50*index).animate({opacity: 0}, 200);
-            // }
+            translationX(item) {
+                return 0;
+                // return item.bounding_box.Left;
+            },
+            translationY(item) {
+                // var heightInPixels = item.img_info.img_meta_data.dimensions.height;
+                // var widthtInPixels = item.img_info.img_meta_data.dimensions.width;
+                // return (100-(item.bounding_box.Height))/2;
+                return (item.bounding_box.Top/2);
+                // return item.bounding_box.Top;
+            }
         },
 
         computed: {
@@ -138,7 +143,6 @@
         },
         watch: {
             data: function (val) {
-                console.log(this.data);
                 if (this.data.length !== 0) {
                     this.runCascadeEffectShow();
                 }
