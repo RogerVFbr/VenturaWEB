@@ -6,7 +6,7 @@
 
             <div class="card-image" @click="callback(reckon)"   >
                 <div class="imagecontainer">
-                    <img v-if="reckon.img_info.img_meta_data.dimensions.height>reckon.img_info.img_meta_data.dimensions.width"
+                    <img v-if="checkOrientation(reckon)"
                          class="log-image highimage"
                          :src="bucketUrl + reckon.img_info.s3_path_hash"
                          alt="Identity entry"
@@ -18,7 +18,6 @@
                          alt="Identity entry"
                          />
                 </div>
-<!--                <img class="log-image" :src="bucketUrl + reckon.img_info.s3_path_hash" alt="Smiley face" height="150" width="100">-->
                 <div class="imgcaption">
                     <div class="left">
                         {{ getDateFromDateTime(reckon.time) }}
@@ -31,7 +30,7 @@
 
             <div class="card-content white-text">
 <!--                <p class="card-text truncate">{{ reckon.userId }}</p>-->
-                <p class="card-text truncate">{{ reckon.img_info.img_meta_data.exif.Orientation }}</p>
+                <p class="card-text truncate">{{ reckon.img_info.img_meta_data.exif.Orientation ?  reckon.img_info.img_meta_data.exif.Orientation : 'None'}}</p>
             </div>
 
         </div>
@@ -131,18 +130,37 @@
                 }, 100);
 
             },
-            translationX(item) {
+            checkOrientation: function(item) {
+                return item.img_info.img_meta_data.dimensions.height>item.img_info.img_meta_data.dimensions.width;
+            },
+            translationX: function (item) {
                 return 0;
                 // return item.bounding_box.Left;
             },
-            translationY(item) {
+            translationY: function (item) {
                 // var heightInPixels = item.img_info.img_meta_data.dimensions.height;
                 // var widthtInPixels = item.img_info.img_meta_data.dimensions.width;
                 // return (100-(item.bounding_box.Height))/2;
                 return (item.bounding_box.Top/2);
                 // return item.bounding_box.Top;
             },
-            rotation(item) {
+            rotation: function(item) {
+
+                // if exif_data['Orientation'] == 1 or exif_data['Orientation'] == 2:
+                // return image, img_bytes
+                // elif exif_data['Orientation'] == 3 or exif_data['Orientation'] == 4:
+                // rotation = 180
+                // elif exif_data['Orientation'] == 5 or exif_data['Orientation'] == 6:
+                // rotation = 270
+                // elif exif_data['Orientation'] == 7 or exif_data['Orientation'] == 8:
+                // rotation = 90
+
+
+                if (!this.isMobile) return;
+                var exifOrientation = item.img_info.img_meta_data.exif.Orientation;
+                if (exifOrientation === 3 || exifOrientation === 4) return 180;
+                else if (exifOrientation === 5 || exifOrientation === 6) return -90;
+                else if (exifOrientation === 7 || exifOrientation === 8) return 90;
                 return 0;
             },
         },
