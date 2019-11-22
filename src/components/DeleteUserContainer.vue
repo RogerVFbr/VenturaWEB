@@ -272,13 +272,13 @@
     .closebutton {
         position: absolute;
         top: 10px;
-        right: 10px;
+        left: 10px;
     }
 
     .registerbutton {
         position: absolute;
         top: 10px;
-        left: 10px;
+        right: 10px;
         transition: all 0.3s;
     }
 

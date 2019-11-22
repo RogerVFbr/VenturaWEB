@@ -35,8 +35,8 @@
             </div>
 
             <div class="card-content white-text">
-<!--                <p class="card-text truncate">{{ reckon.userId }}</p>-->
-                <p class="card-text truncate">{{ reckon.img_info.img_meta_data.exif.Orientation ?  reckon.img_info.img_meta_data.exif.Orientation : 'None'}}</p>
+                <p class="card-text truncate">{{ reckon.userId }}</p>
+<!--                <p class="card-text truncate">{{ reckon.img_info.img_meta_data.exif.Orientation ?  reckon.img_info.img_meta_data.exif.Orientation : 'None'}}</p>-->
             </div>
 
         </div>

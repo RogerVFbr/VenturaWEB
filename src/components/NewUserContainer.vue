@@ -66,16 +66,16 @@
 
                     <div class="col s12 m12 l12">
 
-                        <button class="waves-effect waves-light btn-small teal darken-4 registerbutton" type="submit" @click="register()"
-                                :class="{ buttondisabled: !formData.validated || registerContent.show || errorContent.show}">
-                            Register
-                            <i class="material-icons right">send</i>
-                        </button>
-
                         <button class="waves-effect waves-light btn-small red darken-4 closebutton" type="submit" @click="close()"
                                 :class="{ buttondisabled: registerContent.show || errorContent.show }">
                             Cancel
                             <i class="material-icons right">cancel</i>
+                        </button>
+
+                        <button class="waves-effect waves-light btn-small teal darken-4 registerbutton" type="submit" @click="register()"
+                                :class="{ buttondisabled: !formData.validated || registerContent.show || errorContent.show}">
+                            Register
+                            <i class="material-icons right">send</i>
                         </button>
 
                     </div>
@@ -321,13 +321,13 @@
     .closebutton {
         position: absolute;
         top: 10px;
-        right: 10px;
+        left: 10px;
     }
 
     .registerbutton {
         position: absolute;
         top: 10px;
-        left: 10px;
+        right: 10px;
         transition: all 0.3s;
     }
 
