@@ -291,18 +291,15 @@
 
     .log-image {
         position: absolute;
-        /*top: -200px;*/
-        /*transform: translateY(-50%);*/
-        /*left: 100%;*/
-        /*height: 200%;*/
+
         /*object-fit: cover;*/
-        /*height: 100%;*/
-        /*width: 100%;*/
-        /*transform: translateY(-25%);*/
     }
 
     .mobileimage {
-
+        display: flex;
+        align-content: center;
+        width:100%;
+        height: auto;
     }
 
     .highimage {
