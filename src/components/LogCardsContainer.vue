@@ -17,7 +17,7 @@
                          :src="bucketUrl + reckon.img_info.s3_path_hash"
                          alt="Identity entry"
                          v-bind:style="{
-                            transform: 'translate(-' + translationX(reckon)*100 + '%, -' + translationY(reckon)*100 + '%) rotate(' + rotation(reckon) + 'deg)'}">
+                            transform: 'translate(-' + translationX(reckon)*100 + '%, -' + translationY(reckon)*100 + '%)'}">
                     <img v-else
                          class="log-image wideimage"
                          :src="bucketUrl + reckon.img_info.s3_path_hash"
