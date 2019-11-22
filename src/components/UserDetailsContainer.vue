@@ -194,7 +194,8 @@
                 imgVertical: false,
                 data: {},
                 userRegisters: [],
-                index: 0
+                index: 0,
+                exifOrientation: 0
             }
         },
         methods: {
@@ -240,6 +241,8 @@
                 let width = this.data.img_info.img_meta_data.dimensions.width;
                 if (height > width) this.imgVertical = true;
                 else this.imgVertical = false;
+                var exifOrientation = this.data.img_info.img_meta_data.exif.Orientation;
+                if (exifOrientation) this.exifOrientation = exifOrientation;
             },
             loadGoogleMapsIframe: function () {
                 if (this.data.identity.coordinates.lat == 'N.A.' || this.data.identity.coordinates.lng == 'N.A') return;
