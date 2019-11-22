@@ -191,6 +191,13 @@
         left: 50%;
         transform: translate(-50%);
         top: 20px;
+        /*width: 415px;*/
+    }
+
+    @media only screen and (max-width: 575px) {
+        #deleteusercontainer {
+            width: 415px !important;
+        }
     }
 
     #deleteusercontent {
