@@ -1,18 +1,18 @@
 <template>
 
     <div id="cardscontainer" class="container" :class="{ invisible: !visible, visible: visible }" v-if="dataInner.length">
-        <p class="white-text">{{this.isMobile}}</p>
+<!--        <p class="white-text">{{this.isMobile}}</p>-->
         <div class="card evcard z-depth-3" v-for="reckon in computedData">
 
             <div class="card-image" @click="callback(reckon)"   >
                 <div class="imagecontainer">
-                    <img v-if="isMobile"
-                         class="log-image mobileimage"
-                         :src="bucketUrl + reckon.img_info.s3_path_hash"
-                         alt="Identity entry"
-                         v-bind:style="{
-                            transform: 'translate(-' + translationX(reckon)*100 + '%, -' + translationY(reckon)*100 + '%) rotate(' + rotation(reckon) + 'deg)'}">
-                    <img v-else-if="checkOrientation(reckon)"
+<!--                    <img v-if="isMobile"-->
+<!--                         class="log-image mobileimage"-->
+<!--                         :src="bucketUrl + reckon.img_info.s3_path_hash"-->
+<!--                         alt="Identity entry"-->
+<!--                         v-bind:style="{-->
+<!--                            transform: 'translate(-' + translationX(reckon)*100 + '%, -' + translationY(reckon)*100 + '%) rotate(' + rotation(reckon) + 'deg)'}">-->
+                    <img v-if="checkOrientation(reckon)"
                          class="log-image highimage"
                          :src="bucketUrl + reckon.img_info.s3_path_hash"
                          alt="Identity entry"
@@ -214,7 +214,6 @@
     }
 
     .spacer {
-        /*background-color: #2c3e50;*/
         height: 10px;
         width: 10px;
         margin: auto;
@@ -286,21 +285,19 @@
         height: 150px;
         width: 100%;
         /*background-color: white;*/
-
     }
 
     .log-image {
         position: absolute;
-
         /*object-fit: cover;*/
     }
 
-    .mobileimage {
-        display: flex;
-        align-content: center;
-        width:100%;
-        height: auto;
-    }
+    /*.mobileimage {*/
+    /*    display: flex;*/
+    /*    align-content: center;*/
+    /*    width:100%;*/
+    /*    height: auto;*/
+    /*}*/
 
     .highimage {
         max-width:100%;
