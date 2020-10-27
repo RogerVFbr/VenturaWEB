@@ -1,14 +1,12 @@
 <template>
     <div id="app">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <Navbar :key="$route.fullPath"></Navbar>
-<!--        <div class="row page">-->
-            <div class="col-12">
-                <transition name="router-anim">
-                    <router-view :key="$route.fullPath"/>
-                </transition>
-            </div>
-<!--        </div>-->
+        <Navbar :key="$route.fullPath"/>
+        <div class="col-12">
+            <transition name="router-anim">
+                <router-view :key="$route.fullPath"/>
+            </transition>
+        </div>
     </div>
 </template>
 
@@ -21,8 +19,6 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         color: #2c3e50;
-        /*height: 100%;*/
-        /*overflow-x: hidden;*/
     }
 
     .page {

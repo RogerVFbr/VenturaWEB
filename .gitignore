@@ -19,6 +19,3 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
-#src/sensitivedata/firebase.js
-#src/sensitivedata/apixu.js
-#src/sensitivedata/locationiq-geocoding.js

@@ -32,7 +32,7 @@
     import CriarNovaConta from "./components/CriarNovaConta";
     import Beneficios from "./components/Beneficios";
 
-    import { API_CONFIG } from "../../sensitivedata/api-config";
+    import { API_CONFIG } from "../../configs/api-config";
     import UserService from "../../services/UserService";
     import User from "../../core/User";
 

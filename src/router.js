@@ -9,8 +9,6 @@ import AddCriterios from "./views/PublishVaga/AddCriterios";
 import ResponderVaga from "./views/ResponderVaga/ResponderVaga";
 import Ranking from "./views/Ranking/Ranking";
 
-// import { auth } from './sensitivedata/firebase';
-
 Vue.use(Router)
 
 let router = new Router({

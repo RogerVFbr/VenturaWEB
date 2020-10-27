@@ -110,7 +110,7 @@
 <script>
 
     import ViewContainer from "../../components/ViewContainer";
-    import {API_CONFIG} from "../../sensitivedata/api-config";
+    import {API_CONFIG} from "../../configs/api-config";
     import Vue2Filters from 'vue2-filters'
 
     export default {

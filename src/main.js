@@ -5,12 +5,10 @@ import jQuery from 'jquery';
 import 'materialize-css';
 import 'materialize-css/dist/css/materialize.css'
 import './assets/app.scss';
-// import './sensitivedata/firebase'
 import { rtdbPlugin } from 'vuefire'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faInfo, faEdit, faTrash, faSpinner, faMapSigns, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { auth } from './sensitivedata/firebase';
 import Vue2Filters from "vue2-filters";
 
 window.$ = window.jQuery = jQuery;
@@ -30,15 +28,3 @@ if (!app) {
 
     }).$mount('#app')
 }
-
-// auth.onAuthStateChanged(() => {
-//     if (!app) {
-//         app = new Vue({
-//             router,
-//             render: h => h(App),
-//
-//         }).$mount('#app')
-//     }
-// });
-
-

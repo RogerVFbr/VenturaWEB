@@ -21,7 +21,7 @@
     import UserService from "../../services/UserService";
     import HomeContent from "./components/HomeContent";
     import MessageFloater from "../../components/MessageFloater";
-    import { API_CONFIG } from "../../sensitivedata/api-config";
+    import { API_CONFIG } from "../../configs/api-config";
 
     export default {
         name: "Home",

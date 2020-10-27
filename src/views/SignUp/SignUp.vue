@@ -108,7 +108,7 @@
 <script>
     import UserService from "../../services/UserService";
     import User from "../../core/User";
-    import {API_CONFIG} from "../../sensitivedata/api-config";
+    import {API_CONFIG} from "../../configs/api-config";
 
     export default {
         name: "SignUp",

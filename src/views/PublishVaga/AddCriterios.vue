@@ -146,7 +146,7 @@
 </template>
 
 <script>
-    import {API_CONFIG} from "../../sensitivedata/api-config";
+    import {API_CONFIG} from "../../configs/api-config";
     import UserService from "../../services/UserService";
 
     export default {
