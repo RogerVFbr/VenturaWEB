@@ -1,7 +1,10 @@
 <template>
-    <div id="fab-button" class="floating-button purple darken-4 waves-effect wavese-light hoverable" @click="triggerOnclick" :class="{ hideclass: !show , showclass: show}">
-        <font-awesome-icon icon="plus" class="floating-button-icon white-text"/>
+    <div class="container">
+        <div id="fab-button" class="floating-button purple darken-4 waves-effect wavese-light hoverable pulse" @click="triggerOnclick" :class="{ hideclass: !show , showclass: show}">
+            <font-awesome-icon icon="plus" class="floating-button-icon white-text"/>
+        </div>
     </div>
+
 </template>
 
 <script>
@@ -23,8 +26,8 @@
         position:fixed;
         width:55px;
         height:55px;
-        bottom:20px;
-        right:20px;
+        /*bottom:20px;*/
+        /*right:20px;*/
         border-radius:50px;
         text-align:center;
         box-shadow: 5px 5px 30px rgba(0, 0, 0, .4);
@@ -37,14 +40,14 @@
     }
 
     @keyframes fadeIn {
-        from {
+        0% {
             opacity: 0;
             bottom: 10px;
             right: 10px;
             transform: scale(.8);
             -webkit-transform: scale(.8);
         }
-        to {
+        100% {
             opacity: 1;
             bottom: 20px;
             right: 20px;

@@ -2,13 +2,13 @@
     <div id="app">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <Navbar :key="$route.fullPath"></Navbar>
-        <div class="row">
-            <div class="col-sm-12 page home">
+<!--        <div class="row page">-->
+            <div class="col-12">
                 <transition name="router-anim">
                     <router-view :key="$route.fullPath"/>
                 </transition>
             </div>
-        </div>
+<!--        </div>-->
     </div>
 </template>
 
@@ -27,7 +27,7 @@
 
     .page {
         position: fixed;
-        width: inherit;
+        width: 100% !important;
     }
 
     body {
@@ -36,7 +36,7 @@
 
     .router-anim-enter-active {
         animation: coming .7s;
-        animation-delay: .2s;
+        animation-delay: .3s;
         opacity: 0;
     }
 

@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Update from './views/UpdateContact.vue';
-// import LoginRegister from './views/LoginRegister.vue';
-// import Log from './views/Log.vue';
-import ReckonLog from './views/ReckonLog.vue';
-import ReckonFailLog from './views/ReckonFailLog.vue';
-import RegisterLog from './views/RegisterLog.vue';
-import Users from './views/Users.vue';
-import Reckon from './views/Reckon.vue';
+import SignIn from "./views/SignIn/SignIn";
+import Home from "./views/Home/Home";
+import SignUp from "./views/SignUp/SignUp";
+import PublishVaga from "./views/PublishVaga/PublishVaga";
+// import UserService from "./services/UserService";
+import AddCriterios from "./views/PublishVaga/AddCriterios";
+import ResponderVaga from "./views/ResponderVaga/ResponderVaga";
+import Ranking from "./views/Ranking/Ranking";
 
 // import { auth } from './sensitivedata/firebase';
 
@@ -17,15 +17,47 @@ let router = new Router({
     routes: [
         {
             path: '/',
-            name: 'users',
-            component: Users
-
+            name: 'signin',
+            component: SignIn
         },
-        // {
-        //     path: '/log',
-        //     name: 'log',
-        //     component: Log
-        // },
+        {
+            path: '/signin',
+            name: 'signin',
+            component: SignIn
+        },
+        {
+            path: '/home',
+            name: 'home',
+            component: Home
+        },
+        {
+            path: '/signup',
+            name: 'signup',
+            component: SignUp
+        },
+        {
+            path: '/publishvaga',
+            name: 'publishvaga',
+            component: PublishVaga
+        },
+        {
+            path: '/addcriterios',
+            name: 'addcriterios',
+            component: AddCriterios,
+            props: true
+        },
+        {
+            path: '/respondervaga',
+            name: 'respondervaga',
+            component: ResponderVaga,
+            props: true
+        },
+        {
+            path: '/ranking',
+            name: 'ranking',
+            component: Ranking,
+            props: true
+        },
         // {
         //     path: '/add',
         //     name: 'add',
@@ -42,36 +74,6 @@ let router = new Router({
         //         requiresAuth: true
         //     }
         // },
-        // {
-        //     path: '/login',
-        //     name: 'login',
-        //     component: LoginRegister
-        // },
-        {
-            path: '/reckon-log-success',
-            name: 'reckon-log-success',
-            component: ReckonLog
-        },
-        {
-            path: '/reckon-log-fail',
-            name: 'reckon-log-fail',
-            component: ReckonFailLog
-        },
-        {
-            path: '/register-log',
-            name: 'register-log',
-            component: RegisterLog
-        },
-        {
-            path: '/users',
-            name: 'users',
-            component: Users
-        },
-        {
-            path: '/reckon',
-            name: 'reckon',
-            component: Reckon
-        },
     ]
 })
 

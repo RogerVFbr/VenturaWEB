@@ -309,7 +309,7 @@
         height: 100%;
     }
 
-    .card .content small {
+    .card .view-container small {
         display: inline-block !important;
 
     }
